@@ -47,6 +47,7 @@ Jogo::Jogo() {
 	eventos = new Eventos(this);
 	partida = new Partida(this);
 	audio = new Audio();
+//	gui = new Gui();
 	this->menu();
 	
 	//partida->executa(); // TODO: desvincular inicio da partida do construtor de jogo

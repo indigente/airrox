@@ -53,17 +53,18 @@ Audio::Audio() {
 		
 		if(Mix_OpenAudio(audio_rate, AUDIO_S16, audio_channels, audio_buffers)) {
 			cout <<  "Audio não pode ser iniciado!" << endl;
-			SDL_Quit();
-			exit(1);
-		}
-
-		Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
+			audio_on = false;
+			//SDL_Quit();
+			//exit(1);
+		}else {
+			Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
 	
-		carregarPlaylist();
-		carregarfxs();
+			carregarPlaylist();
+			carregarfxs();
+		}
 	}	
 	
-	Mix_VolumeMusic(Mix_VolumeMusic(-1)-30);
+	//Mix_VolumeMusic(Mix_VolumeMusic(-1)-30);
 }
 
 Audio::~Audio() {

@@ -45,13 +45,13 @@ Visual::Visual(Jogo *j, int telaLargura, int telaAltura, bool telaCheia, string 
 		
 	glViewport(0,0,this->telaLargura,this->telaAltura);
 	
-	/*GLfloat luzAmbiente[4]={0.3,0.3,0.3,1.0};
+	GLfloat luzAmbiente[4]={0.3,0.3,0.3,1.0};
 	GLfloat luzDifusa[4]={55.0,55.0,55.0,55.0};
 	GLfloat luzEspecular[4]={0.0,0.0,0.0,0.0};
 	GLfloat posicaoLuz[4]={0.0,0.0,50.0,0.0};
 	GLfloat especularidade[4]={0.0,0.0,0.0,0.0};
 	
-	GLint especMaterial=120;*/
+	GLint especMaterial=120;
 	
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
@@ -59,22 +59,22 @@ Visual::Visual(Jogo *j, int telaLargura, int telaAltura, bool telaCheia, string 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	
-	/*glMaterialfv(GL_FRONT,GL_SPECULAR,especularidade);
+	glMaterialfv(GL_FRONT,GL_SPECULAR,especularidade);
 	glMateriali(GL_FRONT,GL_SHININESS,especMaterial);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,luzAmbiente);
 
 	glLightfv(GL_LIGHT0,GL_AMBIENT,luzAmbiente);
 	glLightfv(GL_LIGHT0,GL_DIFFUSE,luzDifusa);
 	glLightfv(GL_LIGHT0,GL_SPECULAR,luzEspecular);
-	glLightfv(GL_LIGHT0,GL_POSITION,posicaoLuz);*/
+	glLightfv(GL_LIGHT0,GL_POSITION,posicaoLuz);
 
 	/* Camera */
 	Vetor origem(0,-180,100), alvo(0,0,0);
 	camera = new Camera(jogo,origem,alvo);
 	
-	/*glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);*/
+	glEnable(GL_LIGHT0);
 	
 	/*TODO criar uma variavel Path de texturas e meshs*/
 	Load3DS (&mesa,"../meshs/mesa.3ds");
@@ -337,17 +337,21 @@ void Visual::RedimensionaTela(int x, int y)
 /**************** Metodos de desenho ***************************/
 
 void Visual::Desenha(void) {
+	float g_LightPosition[4] = {0, 1, 0, 1};
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	defineCamera();
 	glEnable(GL_TEXTURE_2D);
-///	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);
+	glLightfv( GL_LIGHT0, GL_POSITION, g_LightPosition );
+	glEnable(  GL_LIGHT0   );	
+	glNormal3f(1, 0, 1);
 	DesenhaMesa();
 	DesenhaDisco();
 	DesenhaJogador(0);
 	DesenhaJogador(1);
 	DesenhaPlacar();
 	glDisable(GL_TEXTURE_2D);
-//	glDisable(GL_LIGHTING);
+	glDisable(GL_LIGHTING);
 	Escrita2D();
 	SDL_GL_SwapBuffers();
 }	
@@ -452,6 +456,7 @@ void Visual::DesenhaMesh(obj_type_ptr mesh)
                     mesh->vertex[ (unsigned short)mesh->polygon[l_index].c ].z);
 	}
     	glEnd();
+
 }
 
 void Visual::DesenhaMesa(void) {
