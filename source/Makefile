@@ -48,7 +48,7 @@ $(LOADER3D_PATH)/texture.o \
 $(LOADER3D_PATH)/3dsloader.o
 
 # bibliotecas para Linux
-LIBSLINUX = -L/usr/X11R6/lib -lGL -lGLU -lglut -L/usr/lib -lSDL_mixer -lSDL -lpthread `sdl-config --cflags --libs`
+LIBSLINUX = -L/usr/X11R6/lib -lGL -lGLU -lglut -L/usr/lib -lSDL_mixer -lSDL -lpthread `sdl-config --cflags --libs` -lSDL_net
 
 # bibliotecas para Windows
 LIBSWIN = -lopengl32 -lglu32 -lglut32 -lmingw32 -lSDLmain -lSDL -lSDL_mixer -mwindows -L$(DEVCPP_PATH)\lib

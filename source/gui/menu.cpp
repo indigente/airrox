@@ -100,7 +100,7 @@ int Menu::update(int mousex, int mousey, int click)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// XXX - nao sei por que, mas fica lento se tirar isso
-	::EscreveString(0, 0, " ");
+//	::EscreveString(0, 0, " ");
 	
 	for (i = 0; i < items.size(); i++)
 	{
