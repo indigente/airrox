@@ -36,6 +36,7 @@ using namespace std;
 #include "visual.h"
 #include "audio.h"
 #include "console.h"
+#include "config.h"
 #include "gui/menu.h"
 #include "gui/textwidget.h"
 // #include "conexao.h"
@@ -44,9 +45,27 @@ using namespace std;
 
 void Jogo::inicializacao()
 {
-	visual = new Visual(this,320,240,false,"AirRox 0.0.3 ALFA");
+	config = new Config("config.txt");
+	// parametros de configuracao
+	config->cria("TelaLargura", INT);
+	config->cria("TelaAltura", INT);
+	config->cria("TelaCheia", INT);
+	config->cria("Nome", STRING);
+	config->cria("Servidor", STRING);
+	config->cria("Porta", INT);
+	config->cria("Sensibilidade", FLOAT);
+	config->cria("Tentativas", INT);
+	config->cria("Intervalo", INT);
+	config->carrega();
+	config->ativaAutoSalvar();
+	
+	visual = new Visual(this,config->getInt("TelaLargura"),
+	 config->getInt("TelaAltura"),
+	 config->getInt("TelaCheia") != 0,
+	 "AirRox 0.0.4 ALFA");
 	audio = new Audio();
-	controle = new Controle(this);
+	controle = new Controle(this, config->getFloat("Sensibilidade"));
+
 }
 
 Jogo::Jogo(int modo, char *host, int porta)
@@ -63,9 +82,10 @@ Jogo::Jogo() {
 }
 
 Jogo::~Jogo() {
-	delete visual;
+	delete config;
 	delete audio;
 	delete controle;
+	delete visual;
 }
 
 /**
@@ -126,7 +146,7 @@ int Jogo::tentaConectar(int modo, char *host, int porta, int tentativas, int int
 	for (i = 1; i <= tentativas; i++)
 	{
 		sprintf(msg, "Tentando conectar a %s:%d (%d)", host, porta, i);
-		console->insere(msg);		
+		console->insere(msg);
 		
 		t1 = glutGet(GLUT_ELAPSED_TIME);
 		
@@ -135,6 +155,11 @@ int Jogo::tentaConectar(int modo, char *host, int porta, int tentativas, int int
 		// tenta receber mensagem no tempo esperado
 		do {
 			tipomsg = conexao->recebeMensagem();
+			
+			controle->processaEventos();
+			if (controle->getKeyState(SDLK_ESCAPE))
+				return 0;			
+			
 			atualizaConsole();
 		} while (glutGet(GLUT_ELAPSED_TIME) - t1 < intervalo && 
 		   tipomsg != TIPO_CONEXAO_ACEITA && tipomsg != TIPO_CONEXAO_REJEITADA);
@@ -179,7 +204,8 @@ void Jogo::iniciaCliente(int modo, char *host, int porta)
 	else // cliente observador
 		partida->inicializa(MODO_OBSERVADOR);
 	conexao = new AirCliente(this->partida, 0);
-	if (tentaConectar(modo == MODO_MULTIPLAYER_CLIENTE, host, porta))
+	if (tentaConectar(modo == MODO_MULTIPLAYER_CLIENTE, 
+	 host, porta, config->getInt("Tentativas"), config->getInt("Intervalo")))
 		partida->executa();
 	delete conexao;
 }
@@ -248,10 +274,13 @@ int Jogo::entradaDeTexto(TextWidget *text)
 
 int Jogo::pegaPorta()
 {
+	char buf[40];
 	static TextWidget *text = new TextWidget(20, 60, 5, GLUT_BITMAP_TIMES_ROMAN_24);
 	int pronto = 0;
 	
-	text->limpa();
+	sprintf(buf, "%u", config->getInt("Porta"));
+	text->setText(buf);
+	
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -259,14 +288,20 @@ int Jogo::pegaPorta()
 		pronto = entradaDeTexto(text);
 		SDL_GL_SwapBuffers();
 	} while (!pronto);
-	return atoi(text->getText());	
+	
+ 	int i = atoi(text->getText());
+	config->set("Porta", &i);
+	
+	return atoi(text->getText());
 }
 
 char *Jogo::pegaHost()
 {
 	static TextWidget *text = new TextWidget(20, 60, 50, GLUT_BITMAP_TIMES_ROMAN_24);
 	int pronto = 0;
-	
+
+	text->setText(config->getString("Servidor").c_str());
+
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -274,6 +309,8 @@ char *Jogo::pegaHost()
 		pronto = entradaDeTexto(text);
 		SDL_GL_SwapBuffers();
 	} while (!pronto);
+	
+	config->set("Servidor", (void *)&((string)text->getText()));
 	return text->getText();
 }
 

@@ -2,6 +2,7 @@
 #define _TEXTWIDGET_HPP
 
 #include <GL/glut.h>
+#include <string.h>
 
 /**
  * Campo de entrada de texto (uma linha)
@@ -28,6 +29,8 @@ class TextWidget
 		int getX() { return posx; }
 		int getY() { return posy; }
 		char *getText() { return text; }
+		
+		void setText(const char *s) { strcpy(text, s); }
 };
 
 #endif

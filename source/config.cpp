@@ -61,12 +61,8 @@ Config::Config(string arquivo)
 	else {
 		cerr << "Config: erro ao abrir arquivo " << arquivo << endl;
 	}
-	
-	// DEBUG
-	string nos = "nos";
-	string dir = "dir ";
-	string esq = "  esq";
-	cout << (*removeEspacos(&nos)) << "-" << (*removeEspacos(&dir)) << "-" << (*removeEspacos(&esq)) << endl;
+
+	this->autoSalvar = false;
 }
 
 /** 
@@ -85,8 +81,11 @@ Config::~Config()
 void Config::set(string param, void *valor)
 {
 	Parametro *p;
-	if (p = ponteiroParaParametro(param))
+	if (p = ponteiroParaParametro(param)) {
 		p->set(valor);
+		if (autoSalvar)
+			salva();
+	}
 	else
 		cerr << "Config: Cuidado! Parametro '" << param << "' inexistente!" << endl;
 }
@@ -104,6 +103,30 @@ const void *Config::get(string param)
 		return p->getValor();
 	else
 		return 0;
+}
+
+/**
+ * @return O valor do parametro, convertido em inteiro
+ */
+int Config::getInt(string param)
+{
+	return *((int *)get(param));
+}
+
+/**
+ * @return O valor do parametro, convertido em ponto flutuante
+ */
+float Config::getFloat(string param)
+{
+	return *((float *)get(param));
+}
+
+/**
+ * @return O valor do parametro, convertido em string
+ */
+string Config::getString(string param)
+{
+	return *((string *)get(param));
 }
 
 /**
@@ -157,6 +180,7 @@ void Config::carrega()
 	string linha, nome;
 	string *valor;	
 	string::size_type pos1;
+	bool oldAutoSalvar;
 	
 	// verifica se ha algum problema com o arquivo
 	if (!ifs.is_open()) {
@@ -175,8 +199,11 @@ void Config::carrega()
 			valor = new string(linha, pos1 + 1, linha.length() - (pos1 + 1));
 			removeEspacos(&nome);
 			removeEspacos(valor);
-			cout << "Teste: " << nome << "=" << *valor << endl;
+
+			oldAutoSalvar = autoSalvar;
+			autoSalvar = false;
 			this->set(nome, valor);
+			autoSalvar = oldAutoSalvar;
 		}
 	}
 	
@@ -201,17 +228,16 @@ void Config::salva()
 	for (i = 0; i < params.size(); i++) {
 		switch (params[i].getTipo()) {
 			case INT:
-				ofs << params[i].getNome() << "=" << *((int *)params[i].getValor()) << endl;;
+				ofs << params[i].getNome() << " = " << *((int *)params[i].getValor()) << endl;;
 				break;
 			case FLOAT:
-				ofs << params[i].getNome() << "=" << *((float *)params[i].getValor()) << endl;
+				ofs << params[i].getNome() << " = " << *((float *)params[i].getValor()) << endl;
 				break;
 			case STRING:
-				ofs << params[i].getNome() << "=" << *((string *)params[i].getValor()) << endl;
+				ofs << params[i].getNome() << " = " << *((string *)params[i].getValor()) << endl;
 				break;
 		}
 	}
 	
 	ofs.close();
-
 }

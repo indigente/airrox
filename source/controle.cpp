@@ -29,6 +29,7 @@
 #include "camera.h"
 #include "visual.h"
 #include "audio.h"
+#include "config.h"
 #include <ctype.h>
 
 using std::vector;
@@ -42,8 +43,6 @@ Controle::Controle(Jogo *j, float SENSIBILIDADE) {
 	this->SENSIBILIDADE = SENSIBILIDADE;
 	// desativa o cursor
 	SDL_ShowCursor(SDL_DISABLE);
-	// torna os controles exclusivos para o jogo
-	//SDL_WM_GrabInput(SDL_GRAB_ON);
 	
 	// Ativa unicode
 // 	SDL_EnableUNICODE(1);
@@ -188,8 +187,19 @@ void Controle::processaEventos(){
 //						modelo->inicializaJogo();
 //						break;
 					case SDLK_f:
-						if (SDL_GetModState() & KMOD_CTRL)
+						if (SDL_GetModState() & KMOD_CTRL) {
 							jogo->getVisual()->setarTelaCheia();
+							jogo->getConfig()->set("TelaCheia", &jogo->getVisual()->telaCheia);
+						}
+						break;
+						
+					/* Grab input */
+					case SDLK_F4:
+						// alterna controles exclusivos para o jogo
+						if (SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_OFF)
+							SDL_WM_GrabInput(SDL_GRAB_ON);
+						else
+							SDL_WM_GrabInput(SDL_GRAB_OFF);
 						break;
 
 					/* Modos de camera */
@@ -205,20 +215,28 @@ void Controle::processaEventos(){
 
 					/* Sensibilidade do mouse */
 					case SDLK_F9:
-						if (this->SENSIBILIDADE > 0.1)
+						if (this->SENSIBILIDADE > 0.1) {
 							this->SENSIBILIDADE -= 0.1;
+							jogo->getConfig()->set("Sensibilidade", &this->SENSIBILIDADE);
+						}
 						break;
 					case SDLK_F10:
-						if (this->SENSIBILIDADE < 4.1)
+						if (this->SENSIBILIDADE < 4.1) {
 							this->SENSIBILIDADE += 0.1;
+							jogo->getConfig()->set("Sensibilidade", &this->SENSIBILIDADE);
+						}
 						break;
 						
 					/* Resolucao do video */
 					case SDLK_F11:
 						jogo->getVisual()->diminuirResolucao();
+						jogo->getConfig()->set("TelaLargura", &jogo->getVisual()->telaLargura);
+						jogo->getConfig()->set("TelaAltura", &jogo->getVisual()->telaAltura);
 						break;
 					case SDLK_F12:
 						jogo->getVisual()->aumentarResolucao();
+						jogo->getConfig()->set("TelaLargura", &jogo->getVisual()->telaLargura);
+						jogo->getConfig()->set("TelaAltura", &jogo->getVisual()->telaAltura);
 						break;
 // 					case SDLK_q:
 					case SDLK_ESCAPE:

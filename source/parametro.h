@@ -20,15 +20,11 @@ class Parametro
 	protected:
 		string nome;
 		enum TipoDeParametro tipo;
-/*
-		union u_valor {
-			int i;
-			float f;
-			string s;
-		} valor;
-*/
-		void *valor;
-			
+
+		int valori;
+		float valorf;
+		string valors;
+
 	public:
 
 		
@@ -38,7 +34,7 @@ class Parametro
 		void set(void *valor);
 		const string &getNome() { return nome; }
 		enum TipoDeParametro getTipo() { return tipo; }
-		const void *getValor() { return valor; }
+		const void *getValor();
 };
 
 

@@ -33,6 +33,7 @@ class Audio;
 class AirRede;
 class Console;
 class TextWidget;
+class Config;
 
 /**
  * Classe principal do jogo
@@ -46,6 +47,7 @@ class Jogo {
 		Audio *audio;
 		AirRede *conexao;
 		Console *console;
+		Config *config;
 		
 		void inicializacao();
 	
@@ -67,7 +69,7 @@ class Jogo {
 		int pegaPorta();
 		
 		int aguardaConexao();
-		int tentaConectar(int modo, char *host, int porta, int tentativas=2, int intervalo=3000);
+		int tentaConectar(int modo, char *host, int porta, int tentativas=2, int intervalo=2000);
 		void atualizaConsole();
 
 		// acesso aos membros
@@ -78,6 +80,7 @@ class Jogo {
 		AirRede *getConexao() { return conexao; }
 		Audio *getAudio() { return audio; }
 		Console *getConsole() { return console; }
+		Config *getConfig() { return config; }
 };
 
 #endif

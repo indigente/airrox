@@ -18,6 +18,7 @@ class Config
 	protected:
 		vector<Parametro> params;
 		string arquivo;
+		bool autoSalvar;
 		
 		Parametro *ponteiroParaParametro(string nome);
 		void set(string param, string *valor);
@@ -28,10 +29,18 @@ class Config
 		
 		void set(string param, void *valor);
 		const void *get(string param);
+		
+		int getInt(string param);
+		float getFloat(string param);
+		string getString(string param);
+		
 		void cria(string param, enum TipoDeParametro tipo);
 		
 		void carrega();
 		void salva();
+		
+		void ativaAutoSalvar() { autoSalvar = true; }
+		void desativaAutoSalvar() { autoSalvar = false; }
 };
 
 #endif
