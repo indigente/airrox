@@ -332,7 +332,7 @@ void Jogo::menu() {
 		menu->addItem(MENU_JOGAR_PC, "../imagens/mjogar1.bmp",
 		  "../imagens/mjogar1h.bmp", 0, 20, LEFT);
 		menu->addItem(MENU_JOGAR_SERVIDOR, "../imagens/mjogar2.bmp",
-		  "../imagens/mjogar2h.bmp", 0, 60, LEFT);
+		  "../imagens/mjogar2h.bmp", 0, 63, LEFT);
 		menu->addItem(MENU_JOGAR_CLIENTE, "../imagens/mjogar3.bmp",
 		  "../imagens/mjogar3h.bmp", 0, 100, LEFT);
 		menu->addItem(MENU_OBSERVAR, "../imagens/mobs.bmp",
@@ -349,8 +349,14 @@ void Jogo::menu() {
 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 			controle->processaEventos();
 			ret = menu->update(controle->getMouseX(), 
-			controle->getMouseY(), controle->getMouseButton());
-			SDL_GL_SwapBuffers();
+			 controle->getMouseY(), controle->getMouseButton());
+			if (controle->precisaRedesenhar) {
+				glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+				menu->paint();
+				controle->redesenhado();
+			}
+			if (menu->painted)
+				SDL_GL_SwapBuffers();
 		} while (!ret);
 		
 		SDL_ShowCursor(SDL_DISABLE);

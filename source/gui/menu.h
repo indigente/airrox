@@ -22,6 +22,10 @@ class Menu
 		vector<MenuItem *> items;
 		vector<sItem> iteminfo;
 		SDL_Color bgcolor;
+// 		int mousex, mousey, click;
+		MenuItem *selected;
+		
+		void reconfigureDisplay();
 
 	public:
 //		MenuItem *addItem(int id, char *image, char *hover_image, 
@@ -36,7 +40,9 @@ class Menu
 		void deinit();
 		
 		int update(int mousex, int mousey, int click);
+		void paint();
 //		vector<MenuItem *> *getItems
+		bool painted;
 };
 
 #endif

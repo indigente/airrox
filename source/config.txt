@@ -1,5 +1,5 @@
-TelaLargura = 480
-TelaAltura = 360
+TelaLargura = 320
+TelaAltura = 240
 TelaCheia = 0
 Nome = rodrigo
 Servidor = localhost

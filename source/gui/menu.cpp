@@ -89,11 +89,13 @@ void EscreveString(float x, float y, char *string)
 
 int Menu::update(int mousex, int mousey, int click)
 {
-	int i;
-	int ret = 0;	
-	MenuItem *m;	
 	static int oldw = 0, oldh = 0;
 	static Uint32 oldflags;
+	int i;
+	MenuItem *m;
+
+	painted = false;
+	
 	
 	// se a resolucao mudou
 	if (oldw != SDL_GetVideoSurface()->w || oldh != SDL_GetVideoSurface()->h ||
@@ -102,6 +104,67 @@ int Menu::update(int mousex, int mousey, int click)
 		oldw = SDL_GetVideoSurface()->w;
 		oldh = SDL_GetVideoSurface()->h;
 		oldflags = SDL_GetVideoSurface()->flags;
+		reconfigureDisplay();
+		paint();
+	}
+	
+	// XXX - nao sei por que, mas fica lento se tirar isso
+	::EscreveString(0, 0, " ");
+	
+	for (i = 0; i < items.size(); i++)
+	{
+		m = items[i];
+
+		if (m->contains(mousex, mousey))
+		{
+			if (m != selected) {
+				selected = m;
+				paint();
+			}
+			if (click)
+				return m->getId();
+			else
+				return 0;
+		}
+	}
+	
+	return 0;
+}
+
+void Menu::paint()
+{
+	
+	int i;
+	MenuItem *m;
+
+	painted = true;
+	
+	// XXX - nao sei por que, mas fica lento se tirar isso
+	::EscreveString(0, 0, " ");
+	
+	for (i = 0; i < items.size(); i++)
+	{
+		m = items[i];
+
+		// Escolhe a textura a ser usada
+		if (m == selected)
+			glBindTexture(GL_TEXTURE_2D, m->getHoverImage());
+		else
+			glBindTexture(GL_TEXTURE_2D, m->getImage());
+			
+		// Desenha o plano, aplicando a textura		
+		glBegin(GL_QUADS);
+		glTexCoord2d(0, 1); glVertex2i(m->getX(), m->getY());
+		glTexCoord2d(0, 0); glVertex2i(m->getX(), m->getY() + m->getHeight());
+		glTexCoord2d(1, 0); glVertex2i(m->getX() + m->getWidth(), m->getY() + m->getHeight());
+		glTexCoord2d(1, 1); glVertex2i(m->getX() + m->getWidth(), m->getY());
+		glEnd();
+	}
+}
+
+void Menu::reconfigureDisplay()
+{
+		painted = true;
 		
 		glViewport(0, 0, SDL_GetVideoSurface()->w, SDL_GetVideoSurface()->h);
 	
@@ -111,7 +174,6 @@ int Menu::update(int mousex, int mousey, int click)
 		glScalef(1, -1, 1);
 		glTranslatef(0, -SDL_GetVideoSurface()->h, -1);
 // No Windows, eh necessario recarregar as texturas
-// TODO: fazer funcionar
 #ifdef _WIN32
 		this->init();
 
@@ -137,44 +199,4 @@ int Menu::update(int mousex, int mousey, int click)
 			this->addItem(si.id, si.image, si.hover_image, si.x, si.y, si.al);
 		}
 #endif
-	}
-	
-	// XXX - nao sei por que, mas fica lento se tirar isso
-	::EscreveString(0, 0, " ");
-	
-	for (i = 0; i < items.size(); i++)
-	{
-		m = items[i];
-
-		// Escolhe a textura a ser usada
-		if (m->contains(mousex, mousey))
-			glBindTexture(GL_TEXTURE_2D, m->getHoverImage());
-		else
-			glBindTexture(GL_TEXTURE_2D, m->getImage());
-			
-		// Desenha o plano, aplicando a textura		
-		glBegin(GL_QUADS);
-		glTexCoord2d(0, 1); glVertex2i(m->getX(), m->getY());
-		glTexCoord2d(0, 0); glVertex2i(m->getX(), m->getY() + m->getHeight());
-		glTexCoord2d(1, 0); glVertex2i(m->getX() + m->getWidth(), m->getY() + m->getHeight());
-		glTexCoord2d(1, 1); glVertex2i(m->getX() + m->getWidth(), m->getY());
-		glEnd();
-
-/*
-		GLint texw, texh;
-		glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &texw);
-		glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &texh);
-//		pixels = new unsigned char[m->getWidth() * m->getHeight() + 99999];
-		pixels = new unsigned char[texw * texh * 3];
-		glRasterPos2i(m->getX(), m->getY());
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-		glDrawPixels(m->getWidth(), m->getHeight(),
-			GL_RGB, GL_UNSIGNED_BYTE, pixels);
-		delete pixels;
-*/
-		if (click && m->contains(mousex, mousey))
-			ret = m->getId();
-	}			
-	
-	return ret;
 }
