@@ -147,7 +147,6 @@ void Controle::processaEventos(){
 					u.y = v.y * cos(-M_PI/2) + v.x * sin(-M_PI/2);
 					u.z = 0;
 					u.normaliza();
-					
 
 					int i;
 					for (i = 0; i < MAXJOG; i++)
@@ -175,7 +174,8 @@ void Controle::processaEventos(){
 						jogo->getAudio()->diminuirMusica();
 						break;
 					case SDLK_m:
-						jogo->getAudio()->desligarSom();
+						if (SDL_GetModState() & KMOD_CTRL)
+							jogo->getAudio()->desligarSom();
 						break;
 					//
 					case (SDLK_HOME):
@@ -186,7 +186,8 @@ void Controle::processaEventos(){
 //						modelo->inicializaJogo();
 //						break;
 					case SDLK_f:
-						jogo->getVisual()->setarTelaCheia();
+						if (SDL_GetModState() & KMOD_CTRL)
+							jogo->getVisual()->setarTelaCheia();
 						break;
 
 					/* Modos de camera */
@@ -217,7 +218,7 @@ void Controle::processaEventos(){
 					case SDLK_F12:
 						jogo->getVisual()->aumentarResolucao();
 						break;
-					case SDLK_q:
+// 					case SDLK_q:
 					case SDLK_ESCAPE:
 						jogo->quitGame(0);
 						break;
@@ -239,9 +240,9 @@ void Controle::processaEventos(){
 		jogo->getVisual()->getCamera()->rotatez(M_PI / 10);
 	if (KeyBuffer[SDLK_LEFT])
 		jogo->getVisual()->getCamera()->rotatez(-M_PI / 10);
-	if (KeyBuffer[SDLK_a])
+	if (KeyBuffer[SDLK_a] && SDL_GetModState() & KMOD_CTRL)
 		jogo->getVisual()->getCamera()->moveleft();
-	if (KeyBuffer[SDLK_d])
+	if (KeyBuffer[SDLK_d] && SDL_GetModState() & KMOD_CTRL)
 		jogo->getVisual()->getCamera()->moveright();
 }
 

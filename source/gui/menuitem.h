@@ -42,6 +42,7 @@ class MenuItem
 		int getWidth() { return width; }
 		int getHeight() { return height; }
 		int getId() { return id; }
+		Menu *getSubMenu() { return subMenu; }
 		
 };
 

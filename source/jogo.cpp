@@ -43,8 +43,8 @@ using namespace std;
 #include "rede/aircliente.h"
 #include "rede/airservidor.h"
 
-Jogo::Jogo() {
-	
+void Jogo::inicializacao()
+{
 // 	visual = new Visual(this,640,480,false,"AirRox 0.1 BETA");
 	visual = new Visual(this,320,240,false,"AirRox 0.0.3 ALFA");
 	
@@ -53,8 +53,38 @@ Jogo::Jogo() {
 // 	eventos = new Eventos(this);
 	partida = new Partida(this);
 	audio = new Audio();
-	console = new Console();	
-	
+	console = new Console();
+}
+
+Jogo::Jogo(int modo, char *host, int porta)
+{
+	inicializacao();
+	switch (modo)
+	{
+		case MODO_MULTIPLAYER_SERVIDOR:
+			conexao = new AirServidor(this->partida, porta);
+			partida->inicializa(MODO_MULTIPLAYER_SERVIDOR);
+			partida->executa();
+			break;
+		case MODO_MULTIPLAYER_CLIENTE:
+		case MODO_OBSERVADOR:
+			if (modo == MODO_MULTIPLAYER_CLIENTE) // cliente jogador
+				partida->inicializa(MODO_MULTIPLAYER_CLIENTE);
+			else // cliente observador
+				partida->inicializa(MODO_OBSERVADOR);
+			conexao = new AirCliente(this->partida, 0);
+			((AirCliente *)(conexao))->conecta(host, porta, modo == MODO_MULTIPLAYER_CLIENTE);
+			partida->executa();
+		case MODO_SINGLEPLAYER:
+			partida->inicializa(MODO_SINGLEPLAYER);
+			partida->executa();
+			break;
+	}
+}
+
+Jogo::Jogo() {
+	inicializacao();
+
 	this->menu();
 }
 
@@ -109,19 +139,33 @@ void Jogo::eventos(void *param, void *objeto){
 }
 */
 
-/*
+
 void Jogo::menu() {
 	int ret = 0;
+	int pronto = 0;
 	int i;
-#define MENU_JOGAR 2
-#define MENU_SAIR  3
+	TextWidget *text = new TextWidget(20, 20, 50, GLUT_BITMAP_TIMES_ROMAN_24);	
+	int porta;
+	char host[256];
+	
+#define MENU_JOGAR_PC 2
+#define MENU_JOGAR_SERVIDOR 3
+#define MENU_JOGAR_CLIENTE 4
+#define MENU_OBSERVAR 5
+#define MENU_SAIR  6
 
 	Menu *menu = new Menu();
 
-	menu->addItem(MENU_JOGAR, "../imagens/mjogar.bmp",
-	  "../imagens/mjogarh.bmp", 20, 40, LEFT);
+	menu->addItem(MENU_JOGAR_PC, "../imagens/mjogar1.bmp",
+	  "../imagens/mjogar1h.bmp", 0, 20, LEFT);
+	menu->addItem(MENU_JOGAR_SERVIDOR, "../imagens/mjogar2.bmp",
+	  "../imagens/mjogar2h.bmp", 0, 60, LEFT);
+	menu->addItem(MENU_JOGAR_CLIENTE, "../imagens/mjogar3.bmp",
+	  "../imagens/mjogar3h.bmp", 0, 100, LEFT);
+	menu->addItem(MENU_OBSERVAR, "../imagens/mobs.bmp",
+	  "../imagens/mobsh.bmp", 0, 140, LEFT);
 	menu->addItem(MENU_SAIR, "../imagens/msair.bmp",
-	  "../imagens/msairh.bmp", 20, 100, LEFT);
+	  "../imagens/msairh.bmp", 0, 180, LEFT);
 	  
 	menu->init();
 
@@ -139,36 +183,89 @@ void Jogo::menu() {
 	SDL_ShowCursor(SDL_DISABLE);
 	menu->deinit();
 
-	ret = 0;
-	TextWidget *text = new TextWidget(20, 40, 50, GLUT_BITMAP_TIMES_ROMAN_24);
-	do
-	{	
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-		controle->processaEventos();
-		for (i = 0; i < controle->getLastKeys().size(); i++) {
-			if (controle->getLastKeys()[i] < 128)
-				ret = text->update((char)controle->getLastKeys()[i]);
-		}
-		text->paint();
-
-		SDL_GL_SwapBuffers();
-	} while (!ret);
-	
-	
 	switch (ret)
 	{
-		case MENU_JOGAR:
+		case MENU_JOGAR_PC:
 			partida->inicializa(MODO_SINGLEPLAYER);
 			partida->executa();
+			break;
+		case MENU_JOGAR_SERVIDOR:
+			pronto = 0;			
+			text->posiciona(20, 60);
+			text->limpa();
+			do
+			{	
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				visual->EscreveString(20, 30, GLUT_BITMAP_TIMES_ROMAN_24, "Digite a porta:");
+				controle->processaEventos();
+				for (i = 0; i < controle->getLastKeys().size(); i++) {
+					if (controle->getLastKeys()[i] < 128)
+						pronto = text->update((char)controle->getLastKeys()[i]);
+				}
+				text->paint();
+		
+				SDL_GL_SwapBuffers();
+			} while (!pronto);
+			porta = atoi(text->getText());
+			conexao = new AirServidor(this->partida, porta);
+			partida->inicializa(MODO_MULTIPLAYER_SERVIDOR);
+			partida->executa();
+			break;
+		case MENU_JOGAR_CLIENTE:
+		case MENU_OBSERVAR:
+			pronto = 0;
+			text->posiciona(20, 60);
+			text->limpa();
+			do
+			{	
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				visual->EscreveString(20, 30, GLUT_BITMAP_TIMES_ROMAN_24, "Digite o endereco do servidor:");				
+				controle->processaEventos();
+				for (i = 0; i < controle->getLastKeys().size(); i++) {
+					if (controle->getLastKeys()[i] < 128)
+						pronto = text->update((char)controle->getLastKeys()[i]);
+				}
+				text->paint();
+		
+				SDL_GL_SwapBuffers();
+			} while (!pronto);
+			strcpy(host, text->getText());
+
+			pronto = 0;
+			text->posiciona(20, 60);
+			text->limpa();
+			do
+			{	
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				visual->EscreveString(20, 30, GLUT_BITMAP_TIMES_ROMAN_24, "Digite a porta:");
+				controle->processaEventos();
+				for (i = 0; i < controle->getLastKeys().size(); i++) {
+					if (controle->getLastKeys()[i] < 128)
+						pronto = text->update((char)controle->getLastKeys()[i]);
+				}
+				text->paint();
+		
+				SDL_GL_SwapBuffers();
+			} while (!pronto);
+			porta = atoi(text->getText());
+							
+			if (ret == MENU_JOGAR_CLIENTE) // cliente jogador
+				partida->inicializa(MODO_MULTIPLAYER_CLIENTE);
+			else // cliente observador
+				partida->inicializa(MODO_OBSERVADOR);
+			conexao = new AirCliente(this->partida, 0);
+			((AirCliente *)(conexao))->conecta(host, porta, ret == MENU_JOGAR_CLIENTE);
+			partida->executa();
+			
 			break;
 		case MENU_SAIR:
 			this->quitGame(0);
 			break;
 	}
-}
-*/
 
+}
+
+/*
 void Jogo::menu() {
 	//Menu bizarro temporario
 	char b,c;
@@ -232,6 +329,7 @@ void Jogo::menu() {
 	} while (c != 'S');
 	this->quitGame(0);
 }
+*/
 
 void Jogo::quitGame(int code) {
 	SDL_Quit();

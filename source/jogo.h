@@ -44,11 +44,14 @@ class Jogo {
 		Audio *audio;
 		AirRede *conexao;
 		Console *console;
+		
+		void inicializacao();
 	
 	public:
 		Jogo();
+		Jogo(int modo, char *host, int porta);
 		~Jogo();
-		
+
 		void quitGame(int code);
 		void menu(void);
 		//static void eventos(void *param, void *objeto);

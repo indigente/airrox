@@ -22,11 +22,67 @@
 
 
 #include "jogo.h"
+#include "partida.h"
+#include <stdio.h>
+#include <ctype.h>
 
 #define JOGO_TITULO "AirroX 0.0.0.0.2"
 
-int main(int argc, char **argv) {  	
-	Jogo jogo;
+void instrucoes()
+{
+	printf("AirroX\n");
+	printf("Parametros:\n");
+	printf("  servidor -> S (porta)\n");
+	printf("  cliente -> C (host) (porta)\n");
+	printf("  observador -> O (host) (porta)\n");
+	printf("  contra o PC -> P");
+	printf("\n");
+}
+
+int main(int argc, char **argv) {
+	Jogo *jogo;
+	
+	// o primeiro argumento eh o nome chamado
+	
+	// se forneceu argumentos...
+	if (argc > 1)
+	{
+		char opcao = argv[1][0];
+		switch (toupper(opcao))
+		{
+			// servidor
+			case 'S':
+				if (argc == 3)
+					jogo = new Jogo(MODO_MULTIPLAYER_SERVIDOR, 0, atoi(argv[2]));
+				else
+					instrucoes();
+				break;
+			// cliente
+			case 'C':
+				if (argc == 4)
+					jogo = new Jogo(MODO_MULTIPLAYER_CLIENTE, argv[2], atoi(argv[3]));
+				else
+					instrucoes();
+				break;
+			// observador
+			case 'O':
+				if (argc == 4)
+					jogo = new Jogo(MODO_OBSERVADOR, argv[2], atoi(argv[3]));
+				else
+					instrucoes();
+				break;
+			// contra o PC
+			case 'P':
+				jogo = new Jogo(MODO_SINGLEPLAYER, 0, 0);
+				break;
+			// parametro invalido
+			default:
+				instrucoes();
+				break;
+		}
+	}
+	else
+		jogo = new Jogo();
 	
 	return 1;
 }
