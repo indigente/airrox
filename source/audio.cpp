@@ -53,6 +53,7 @@ Audio::Audio() {
 		
 		if(Mix_OpenAudio(audio_rate, AUDIO_S16, audio_channels, audio_buffers)) {
 			cout <<  "Audio não pode ser iniciado!" << endl;
+			SDL_Quit();
 			exit(1);
 		}
 
