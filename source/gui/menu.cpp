@@ -93,12 +93,15 @@ int Menu::update(int mousex, int mousey, int click)
 	int ret = 0;	
 	MenuItem *m;	
 	static int oldw = 0, oldh = 0;
+	static Uint32 oldflags;
 	
 	// se a resolucao mudou
-	if (oldw != SDL_GetVideoSurface()->w || oldh != SDL_GetVideoSurface()->h)
+	if (oldw != SDL_GetVideoSurface()->w || oldh != SDL_GetVideoSurface()->h ||
+	 oldflags != SDL_GetVideoSurface()->flags )
 	{
 		oldw = SDL_GetVideoSurface()->w;
 		oldh = SDL_GetVideoSurface()->h;
+		oldflags = SDL_GetVideoSurface()->flags;
 		
 		glViewport(0, 0, SDL_GetVideoSurface()->w, SDL_GetVideoSurface()->h);
 	
