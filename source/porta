@@ -1,0 +1,9 @@
+if [ -z $1 ]
+then
+	echo "  Este utilitario muda a porta padrao do AirroX."
+	echo "  A porta padrao eh utilizada pelos scripts 'cliente' e 'servidor'"
+	echo "  Uso: $0 numero-da-porta"
+else
+	echo $1 > porta.txt
+	echo "  A porta atual eh $1"
+fi
