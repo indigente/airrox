@@ -5,10 +5,10 @@
 	#include <time.h>
 	#include <stdarg.h>
 	#include <windows.h>
-	#include <glut.h>
+	#include <GL/glut.h>
 	#include <GL/gl.h>
 	#include <GL/glu.h>
-	#include <SDL.h>
+	#include <SDL/SDL.h>
 	#include <iostream>
 #else
 	#include <iostream>

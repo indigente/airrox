@@ -34,7 +34,6 @@ using namespace std;
 #include "partida.h"
 #include "controle.h"
 #include "visual.h"
-#include "eventos.h"
 #include "audio.h"
 #include "console.h"
 #include "gui/menu.h"

@@ -19,7 +19,7 @@
 
 # caminhos 
 LOADER3D_PATH = 3DSLoader
-DEVCPP_PATH = C:\Arquiv~1\Programacao\Dev-Cpp
+DEVCPP_PATH = C:\Dev-Cpp
 
 
 # arquivos utilizados na compilacao
@@ -38,7 +38,6 @@ vetor.o \
 visual.o \
 camera.o \
 colisao.o \
-comunicacao.o \
 console.o \
 gui/menuitem.o \
 gui/menu.o \
@@ -51,12 +50,14 @@ $(LOADER3D_PATH)/texture.o \
 $(LOADER3D_PATH)/3dsloader.o
 #conexao.o \
 #eventos.o \
+# comunicacao.o \
+#
 
 # bibliotecas para Linux
 LIBSLINUX = -L/usr/X11R6/lib -lGL -lGLU -lglut -L/usr/lib -lSDL_mixer -lSDL -lpthread `sdl-config --cflags --libs` -lSDL_net
 
 # bibliotecas para Windows
-LIBSWIN = -lopengl32 -lglu32 -lglut32 -lmingw32 -lSDLmain -lSDL -lSDL_mixer -mwindows -L$(DEVCPP_PATH)\lib
+LIBSWIN = -lopengl32 -lglu32 -lglut32 -lmingw32 -lSDLmain -lSDL -lSDL_mixer -mwindows -L$(DEVCPP_PATH)\lib -lSDL_net
 
 
 # executavel gerado pelo Linux
