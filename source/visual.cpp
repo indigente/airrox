@@ -205,8 +205,8 @@ void Visual::EscreveString(float x, float y, void *font, const char *string)
       glutBitmapCharacter(font, *c);
 }
 
-void Visual::Escrita2D(void) {
-	char msg[256];
+void Visual::iniciaEscrita2D()
+{
 	int w = this->telaLargura;
 	int h = this->telaAltura;
 	glMatrixMode(GL_PROJECTION);
@@ -218,7 +218,12 @@ void Visual::Escrita2D(void) {
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
 
+void Visual::Escrita2D(void) {
+	char msg[256];
+	iniciaEscrita2D();
+	
 	/////////////////////////////////////////////////////////
 	//Escrever Resolucao
 	/////////////////////////////////////////////////////////
@@ -239,11 +244,17 @@ void Visual::Escrita2D(void) {
 	////////////////////////////////////////////////////////
 	//Escrever Console
 	/////////////////////////////////////////////////////////
+	this->desenhaConsole();
+}
+
+void Visual::desenhaConsole()
+{
 	Console *c = jogo->getConsole();
 	unsigned int i;
 	for (i = 1; i <= c->getTamanho(); i++)
 		EscreveString(10.0, 46.0 + 12.0 * i, (void *)font, c->getLinha(i).c_str());
 }
+
 
 void Visual::cylinder(float r, float h, int segs)
 {

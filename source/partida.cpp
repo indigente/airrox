@@ -50,6 +50,11 @@ Partida::Partida(Jogo *j)
 		
 	//inicializaPartida();
 }
+Partida::~Partida()
+{
+	delete texto;
+	delete disco;
+}
 
 void Partida::inicializa(int modo) {
 
@@ -138,28 +143,38 @@ void Partida::executa()
 	float initempo, fimtempo;
 	int pronto = 0; // indica se o usuario terminou de digitar a mensagem
 	int i;
-// 	int sock = jogo->getConexao()->getSocket();
+	bool fimDeJogo = false;
 	
 	jogo->getAudio()->tocarMusica();
 
-	while(1) {
+	// loop da partida
+	while(!fimDeJogo) {
 		initempo = glutGet(GLUT_ELAPSED_TIME);
 		
-		// controle e texto
+		// controle
 		jogo->getControle()->processaEventos();
-		for (i = 0; i < jogo->getControle()->getLastKeys().size(); i++) {
-			if (jogo->getControle()->getLastKeys()[i] < 128)
-				pronto = texto->update((char)jogo->getControle()->getLastKeys()[i]);
-		}
+		if (jogo->getControle()->getKeyState(SDLK_ESCAPE))
+			fimDeJogo = true;
 		
-		if (pronto) {
-			jogo->getConexao()->enviaTexto(texto->getText());
-			// o servidor nao envia mensagem a si proprio.
-			// por isso eh necessario fazer um tratamento especial.
-			if (this->modo == MODO_MULTIPLAYER_SERVIDOR)
-				jogo->getConsole()->insere(texto->getText());
-			texto->limpa();
-			pronto = 0;
+		// texto, se estiver conectado
+		if (modo == MODO_MULTIPLAYER_SERVIDOR ||
+		 modo == MODO_MULTIPLAYER_CLIENTE ||
+		 modo == MODO_OBSERVADOR)
+		{
+			for (i = 0; i < jogo->getControle()->getLastKeys().size(); i++) {
+				if (jogo->getControle()->getLastKeys()[i] < 128)
+					pronto = texto->update((char)jogo->getControle()->getLastKeys()[i]);
+			}
+			
+			if (pronto) {
+				jogo->getConexao()->enviaTexto(texto->getText());
+				// o servidor nao envia mensagem a si proprio.
+				// por isso eh necessario fazer um tratamento especial.
+				if (this->modo == MODO_MULTIPLAYER_SERVIDOR)
+					jogo->getConsole()->insere(texto->getText());
+				texto->limpa();
+				pronto = 0;
+			}
 		}
 
 		// rede
@@ -168,18 +183,31 @@ void Partida::executa()
 			case MODO_MULTIPLAYER_SERVIDOR:
 			case MODO_MULTIPLAYER_CLIENTE:
 				jogo->getConexao()->enviaEstado();
-				while(tipomsg = jogo->getConexao()->recebeMensagem())
-				{
-					if (tipomsg == TIPO_TEXTO)
-						jogo->getConsole()->insere((const char *)jogo->getConexao()->getDados() + 1);
-				}
-				break;
 			case MODO_OBSERVADOR:
 				while(tipomsg = jogo->getConexao()->recebeMensagem())
 				{
-					if (tipomsg == TIPO_TEXTO)
-						jogo->getConsole()->insere((const char *)jogo->getConexao()->getDados() + 1);
+					switch (tipomsg)
+					{
+						case TIPO_TEXTO:
+							jogo->getConsole()->insere((const char *)jogo->getConexao()->getDados() + 1);
+							break;
+						case TIPO_DESCONECTAR:							
+							if (modo == MODO_MULTIPLAYER_CLIENTE || modo == MODO_OBSERVADOR)
+							{
+								jogo->getConsole()->insere("-- O servidor desconectou");
+								jogo->atualizaConsole();
+								SDL_Delay(1200);
+								fimDeJogo = true;
+							}
+							else {
+								jogo->getConsole()->insere("-- Alguem desconectou");
+								jogo->atualizaConsole();
+							}
+								
+								
+					}
 				}
+				break;
 				break;
 		}
 
@@ -212,10 +240,7 @@ void Partida::executa()
 				
 		if (jog[jc]->getPontuacao() == 7 || jog[jb]->getPontuacao() == 7 ) {
 			cout << "FIM DE JOGO" << endl;
-
-			//TODO criar quitPartida e substituir aqui
-			jogo->quitGame(0);
-			
+			fimDeJogo = true;
 		}
 		//////////////////////////////
 
@@ -236,4 +261,15 @@ void Partida::executa()
 		fimtempo = glutGet(GLUT_ELAPSED_TIME);
 		tempo = fimtempo - initempo;
 	}
+	
+	///////// fim de jogo! ///////////////
+	
+	// manda mensagem de desconexao
+	if (modo == MODO_MULTIPLAYER_SERVIDOR ||
+	 modo == MODO_MULTIPLAYER_CLIENTE ||
+	 modo == MODO_OBSERVADOR)
+		jogo->getConexao()->desconecta();
+
+	// para a musica
+	jogo->getAudio()->musicaParada();
 }

@@ -91,6 +91,8 @@ class Visual {
 		
 		void inicio();
 		void desenhaNoBuffer();
+		void desenhaConsole();
+		void iniciaEscrita2D();
 		void fim();
 };
 #endif

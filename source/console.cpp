@@ -17,8 +17,9 @@ Console::~Console()
 void Console::insere(const string &s)
 {
 	this->posAtual = (this->posAtual + 1) % this->qtdLinhas;
-
 	this->vec[this->posAtual].assign(s);
+	// escreve no terminal, para poder debugar se necessario
+	cout << s << endl;	
 }
 
 void Console::limpa()

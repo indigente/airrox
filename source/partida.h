@@ -55,6 +55,8 @@ class Partida
 	public:
 		int modo;
 		Partida(Jogo *j);
+		~Partida();
+		
 		void executa();
 		void inicializa(int modo);
 

@@ -161,6 +161,8 @@ void Controle::processaEventos(){
 				 (this->KeyBuffer[SDLK_LSHIFT] ||
 				 this->KeyBuffer[SDLK_RSHIFT]))
 					evento.key.keysym.sym = (SDLKey)toupper((char)evento.key.keysym.sym);
+				if (evento.key.keysym.sym == SDLK_KP_ENTER)
+					evento.key.keysym.sym = SDLK_RETURN;
 				lastKeys.push_back(evento.key.keysym.sym);
 // 				if (evento.key.keysym.unicode & 0xFF80 == 0 )
 // 					lastKeys.push_back(evento.key.keysym.unicode & 0x7F);
@@ -220,7 +222,7 @@ void Controle::processaEventos(){
 						break;
 // 					case SDLK_q:
 					case SDLK_ESCAPE:
-						jogo->quitGame(0);
+// 						jogo->quitGame(0);
 						break;
 				}
 				break;

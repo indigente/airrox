@@ -76,6 +76,7 @@ void Camera::setModo(int modo)
 		case CAM_ESTATICA:
 			break;
 		case CAM_GIRO:
+			contador = 0;
 			break;
 		case CAM_TV:
 			break;

@@ -17,8 +17,7 @@ int AirServidor::recebeMensagem()
 			{
 				// provavelmente alguem tentando conectar
 				case -1:
-					this->processaPedidoDeConexao();
-					return this->pacote->data[0];
+					return this->processaPedidoDeConexao();
 					break;
 				// mensagem do jogador
 				case CANAL_JOGADOR:
@@ -44,6 +43,8 @@ int AirServidor::recebeMensagem()
 
 void AirServidor::processaMensagem()
 {
+	IPaddress ip;
+	
 	switch (this->pacote->data[0])
 	{
 		case TIPO_POSICAO:
@@ -56,6 +57,9 @@ void AirServidor::processaMensagem()
 			// repassa para todos os clientes
 			this->envia(CANAL_JOGADOR, this->pacote);
 			this->envia(CANAL_OBSERVADOR, this->pacote);
+			break;
+		case TIPO_DESCONECTAR:
+			// nao sei o que fazer aqui!!!
 			break;
 	}
 }
@@ -96,10 +100,11 @@ void AirServidor::enviaRespostaDeConexao(char tipo)
 /**
  * Aceita/rejeita conexao de um observador ou de um jogador
  */
-void AirServidor::processaPedidoDeConexao()
+int AirServidor::processaPedidoDeConexao()
 {
 	msgConectar *m = (msgConectar *)this->pacote->data;
 	UDPpacket *p = SDLNet_AllocPacket(10);
+	int ret; // retorno da funcao
 		
 	if (m->tipo == TIPO_CONECTAR)
 	{
@@ -108,33 +113,39 @@ void AirServidor::processaPedidoDeConexao()
 			case 1:
 				// aceita conexao
 				if (qtdJogadores < MAXJOGADORES) {
-					enviaRespostaDeConexao(TIPO_CONEXAO_ACEITA);					
+					enviaRespostaDeConexao(TIPO_CONEXAO_ACEITA);
 					this->bind(CANAL_JOGADOR, &this->pacote->address);
 					qtdJogadores++;
+					ret = TIPO_CONEXAO_ACEITA;
 				}
 				// rejeita conexao
 				else
 				{
 					enviaRespostaDeConexao(TIPO_CONEXAO_REJEITADA);
+					ret = TIPO_CONEXAO_REJEITADA;
 				}
 				
 				break;
 			// conexao como observador
 			case 0:
 				// aceita conexao
-				if (qtdObservadores < MAXOBSERVADORES) {
+				if (qtdObservadores < MAXOBSERVADORES && qtdJogadores > 0) {
 					enviaRespostaDeConexao(TIPO_CONEXAO_ACEITA);
 					this->bind(CANAL_OBSERVADOR, &this->pacote->address);
 					qtdObservadores++;
+					ret = TIPO_CONEXAO_ACEITA;
 				}
 				// rejeita conexao
 				else
 				{
 					enviaRespostaDeConexao(TIPO_CONEXAO_REJEITADA);
-				}				
+					ret = TIPO_CONEXAO_REJEITADA;
+				}
 				break;
 		}
 	}
+	
+	return ret;
 	
 	SDLNet_FreePacket(p);
 }

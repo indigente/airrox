@@ -8,7 +8,7 @@ bool AirCliente::conecta(const char *host, Uint16 porta, bool comoJogador)
 	IPaddress ip;
 	int ret;
 	int canal;
-	
+
 	if (!this->conectado)
 	{
 		ret = SDLNet_ResolveHost(&ip, host, porta);
@@ -67,13 +67,15 @@ int AirCliente::recebeMensagem()
 					else
 						recebeRespostaDeConexao();
 					return this->pacote->data[0];
-				// mensagem de um observador
+				// mensagem de um observador - ignora
 				case CANAL_OBSERVADOR:
-					if (this->conectado)
+/*					if (this->conectado)
 						processaMensagemDoJogador();
 					else
 						recebeRespostaDeConexao();
-					return this->pacote->data[0];
+					return this->pacote->data[0];*/
+					return TIPO_OUTROS;
+					break;
 			}
 			break;
 		// nao foi recebido nenhum pacote
@@ -91,6 +93,7 @@ void AirCliente::processaMensagemDoJogador()
 	switch (this->pacote->data[0])
 	{
 		case TIPO_ESTADO:
+		{
 			msgEstado *m = (msgEstado *)this->pacote->data;
 
 			partida->getDisco()->setPos(m->discopos);
@@ -103,6 +106,11 @@ void AirCliente::processaMensagemDoJogador()
 			if (this->canal == CANAL_OBSERVADOR)
 				partida->getJog(0)->setPos(m->clipos);
 			
+			break;
+		}
+		case TIPO_DESCONECTAR:
+			this->unbind(this->canal);
+			this->conectado = false;
 			break;
 	}
 }

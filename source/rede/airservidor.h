@@ -15,7 +15,7 @@ class AirServidor : public AirRede
 		int qtdJogadores;
 		int qtdObservadores;
 		
-		void processaPedidoDeConexao();
+		int processaPedidoDeConexao();
 		void enviaRespostaDeConexao(char tipo);
 		void processaMensagem();
 		

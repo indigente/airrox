@@ -28,6 +28,8 @@
 #define TIPO_CONEXAO_ACEITA 5
 #define TIPO_CONEXAO_REJEITADA 6
 
+// desconectar
+#define TIPO_DESCONECTAR 7
 
 struct msgPura
 {
@@ -74,6 +76,7 @@ class AirRede : public Rede
 		AirRede(Partida *partida, Uint16 porta);
 		~AirRede();
 		
+		void desconecta();
 		void enviaTexto(char *msg);
 		virtual int recebeMensagem()=0;
 		virtual void enviaEstado()=0;

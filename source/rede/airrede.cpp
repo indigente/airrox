@@ -33,3 +33,14 @@ void AirRede::enviaTexto(char *msg)
 	this->envia(CANAL_OBSERVADOR, this->pacote);
 }
 
+void AirRede::desconecta()
+{
+	this->pacote->data[0] = TIPO_DESCONECTAR;
+	
+	this->pacote->len = 1;
+	
+	this->envia(CANAL_JOGADOR, this->pacote);
+	this->envia(CANAL_OBSERVADOR, this->pacote);
+
+}
+

@@ -30,16 +30,18 @@ class Controle;
 class Visual;
 class Eventos;
 class Audio;
-// class Conexao;
 class AirRede;
 class Console;
+class TextWidget;
 
+/**
+ * Classe principal do jogo
+ */
 class Jogo {
 	private:
 		Partida *partida;
 		Controle *controle;
 		Visual *visual;
-// 		Conexao *conexao;
 		Eventos *eventos;
 		Audio *audio;
 		AirRede *conexao;
@@ -54,13 +56,25 @@ class Jogo {
 
 		void quitGame(int code);
 		void menu(void);
-		//static void eventos(void *param, void *objeto);
 		
+		void jogaPartida(int modo, char *host, int porta);
+		void iniciaCliente(int modo, char *host, int porta);
+		void iniciaServidor(int porta);
+		void iniciaSinglePlayer();
+		
+		int entradaDeTexto(TextWidget *text);
+		char *pegaHost();
+		int pegaPorta();
+		
+		int aguardaConexao();
+		int tentaConectar(int modo, char *host, int porta, int tentativas=2, int intervalo=3000);
+		void atualizaConsole();
+
+		// acesso aos membros
 		Partida *getPartida() { return partida; }
 		Eventos *getEventos() { return eventos; }
 		Controle *getControle() { return controle; }
 		Visual *getVisual() { return visual; }
-// 		Conexao *getConexao() { return conexao; }
 		AirRede *getConexao() { return conexao; }
 		Audio *getAudio() { return audio; }
 		Console *getConsole() { return console; }

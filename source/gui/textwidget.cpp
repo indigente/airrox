@@ -50,14 +50,16 @@ int TextWidget::update(char c)
 	
 	switch (c)
 	{
-		case 8: // backspace
+		// backspace
+		case 8: 
 			if (len > 0) {
 				len--;
 				text[len] = '\0';
 			}		
-			break;			
-		case 10:
-		case 13: // enter
+			break;
+		// enter
+		case '\n':
+		case '\r':
 			ret = 1;
 			break;
 		case 27: // esc
@@ -72,7 +74,7 @@ int TextWidget::update(char c)
 			}
 			break;
 	}
-
+	
 	return ret;
 }
 
