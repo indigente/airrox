@@ -47,9 +47,9 @@ Visual::Visual(Jogo *j, int telaLargura, int telaAltura, bool telaCheia, string 
 	Load3DS(&puck,"../meshs/puck.3ds");
 	Load3DS(&placar,"../meshs/placar.3ds");
 
-	criarJanela();
-	inicializaOpenGL();
+	criarJanela();	
 	setarVideo(telaLargura, telaAltura, telaCheia);
+	inicializaOpenGL();
 
 	/* Camera */
 	Vetor origem(0,-180,100), alvo(0,0,0);
