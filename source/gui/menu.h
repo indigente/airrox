@@ -7,10 +7,20 @@
 
 using std::vector;
 
+struct sItem {
+	int id;
+	char image[256];
+	char hover_image[256];
+	int x;
+	int y;
+	Alignment al;
+};
+
 class Menu
 {
 	protected:
 		vector<MenuItem *> items;
+		vector<sItem> iteminfo;
 		SDL_Color bgcolor;
 
 	public:

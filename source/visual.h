@@ -94,6 +94,9 @@ class Visual {
 		void desenhaConsole();
 		void iniciaEscrita2D();
 		void fim();
+
+		void recarregaTexturas();
+		void inicializaOpenGL();
 };
 #endif
 

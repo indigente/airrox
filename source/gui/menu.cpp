@@ -2,6 +2,7 @@
 #include "assert.h"
 #include "menu.h"
 #include "../3DSLoader/texture.h"
+#include "string.h"
 
 MenuItem *Menu::addItem(int id, char *image, char *hover_image, 
   int x, int y, Alignment al)
@@ -21,11 +22,21 @@ MenuItem *Menu::addItem(int id, char *image, char *hover_image,
 	fseek(file, 18, SEEK_CUR);  
 	fread(&w, sizeof(int), 1, file);
 	fread(&h, sizeof(int), 1, file);
-		
+	fclose(file);		
 	
 	MenuItem *m = new MenuItem(id, im, h_im, x, y, w, h, al);
 
 	this->items.push_back(m);
+
+	// guarda informacoes, para o caso de ser necessario recarregar
+	sItem s;
+	s.id = id;
+	strcpy(s.image, image);
+	strcpy(s.hover_image, hover_image);
+	s.x = x;
+	s.y = y;
+	s.al = al;
+	iteminfo.push_back(s);
 
 	return m;
 
@@ -83,6 +94,7 @@ int Menu::update(int mousex, int mousey, int click)
 	MenuItem *m;	
 	static int oldw = 0, oldh = 0;
 	
+	// se a resolucao mudou
 	if (oldw != SDL_GetVideoSurface()->w || oldh != SDL_GetVideoSurface()->h)
 	{
 		oldw = SDL_GetVideoSurface()->w;
@@ -95,6 +107,33 @@ int Menu::update(int mousex, int mousey, int click)
 		gluOrtho2D(0, SDL_GetVideoSurface()->w, 0, SDL_GetVideoSurface()->h);
 		glScalef(1, -1, 1);
 		glTranslatef(0, -SDL_GetVideoSurface()->h, -1);
+// No Windows, eh necessario recarregar as texturas
+// TODO: fazer funcionar
+#ifdef _WIN32
+		this->init();
+
+		vector<sItem> copia(iteminfo);
+		MenuItem *mi;
+		int tex;
+		sItem si;
+
+		for (i = 0; i < items.size(); i++) {
+			mi = items[i];
+			tex = mi->getImage();
+			glDeleteTextures(1, (GLuint *)&tex);
+			tex = mi->getHoverImage();
+			glDeleteTextures(1, (GLuint *)&tex);
+			delete mi;
+		}
+
+		items.clear();
+		iteminfo.clear();
+		
+		for (i = 0; i < copia.size(); i++) {
+			si = copia[i];
+			this->addItem(si.id, si.image, si.hover_image, si.x, si.y, si.al);
+		}
+#endif
 	}
 	
 	// XXX - nao sei por que, mas fica lento se tirar isso

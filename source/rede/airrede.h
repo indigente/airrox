@@ -58,8 +58,8 @@ struct msgEstado {
 	char tipo;
 	Vetor discopos;
 	Vetor discovel;
-	int pontserv; // pontuacao do servidor
-	int pontcli; // pontuacao do cliente
+	char pontserv; // pontuacao do servidor
+	char pontcli; // pontuacao do cliente
 	Vetor servpos; // posicao do servidor
 	Vetor clipos; // posicao do cliente
 };

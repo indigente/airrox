@@ -41,10 +41,32 @@ Visual::Visual(Jogo *j, int telaLargura, int telaAltura, bool telaCheia, string 
 	this->telaLargura = telaLargura;
 	this->telaAltura = telaAltura;
 	this->telaTitulo = telaTitulo.c_str();
-	
+
+	Load3DS (&mesa,"../meshs/mesa.3ds");
+	Load3DS(&mallet,"../meshs/mallet.3ds");
+	Load3DS(&puck,"../meshs/puck.3ds");
+	Load3DS(&placar,"../meshs/placar.3ds");
+
 	criarJanela();
+	inicializaOpenGL();
 	setarVideo(telaLargura, telaAltura, telaCheia);
-		
+
+	/* Camera */
+	Vetor origem(0,-180,100), alvo(0,0,0);
+	camera = new Camera(jogo,origem,alvo);
+	
+
+}
+
+void Visual::inicializaOpenGL()
+{
+	SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
+	SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
+	SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
+	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16);
+	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+	SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE,5);
+
 	glViewport(0,0,this->telaLargura,this->telaAltura);
 	
 	GLfloat luzAmbiente[4]={0.3,0.3,0.3,1.0};
@@ -69,20 +91,11 @@ Visual::Visual(Jogo *j, int telaLargura, int telaAltura, bool telaCheia, string 
 	glLightfv(GL_LIGHT0,GL_DIFFUSE,luzDifusa);
 	glLightfv(GL_LIGHT0,GL_SPECULAR,luzEspecular);
 	glLightfv(GL_LIGHT0,GL_POSITION,posicaoLuz);
-
-	/* Camera */
-	Vetor origem(0,-180,100), alvo(0,0,0);
-	camera = new Camera(jogo,origem,alvo);
-	
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	
 	/*TODO criar uma variavel Path de texturas e meshs*/
-	Load3DS (&mesa,"../meshs/mesa.3ds");
-	Load3DS(&mallet,"../meshs/mallet.3ds");
-	Load3DS(&puck,"../meshs/puck.3ds");
-	Load3DS(&placar,"../meshs/placar.3ds");
 	mesa.id_texture=LoadBitmap("../texturas/mesa.bmp");
 	mallet.id_texture=LoadBitmap("../texturas/mallet.bmp");
     	puck.id_texture=LoadBitmap("../texturas/puck.bmp");
@@ -120,6 +133,22 @@ Visual::Visual(Jogo *j, int telaLargura, int telaAltura, bool telaCheia, string 
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 }
 
+void Visual::recarregaTexturas()
+{
+// So eh necessario no Windows
+#ifdef _WIN32
+
+	glDeleteTextures(1, (const GLuint *)&mesa.id_texture);
+	glDeleteTextures(1, (const GLuint *)&mallet.id_texture);	
+	glDeleteTextures(1, (const GLuint *)&puck.id_texture);	
+	glDeleteTextures(1, (const GLuint *)&placar.id_texture);	
+	glDeleteTextures(8, (const GLuint *)display);
+	glDeleteTextures(1, (const GLuint *)&logomesa);
+
+	inicializaOpenGL();
+#endif
+}
+
 int Visual::criarJanela(void) {
 	const SDL_VideoInfo* telaInfo = NULL;
 //	int telaBpp;
@@ -135,12 +164,6 @@ int Visual::criarJanela(void) {
 	}
 
 	//telaBpp = telaInfo->vfmt->BitsPerPixel;
-	SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16);
-	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-	SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE,5);
 
 	SDL_WM_SetIcon(SDL_LoadBMP("../icones/airrox.bmp"), NULL);
 	SDL_WM_SetCaption(this->telaTitulo.c_str(),NULL);
@@ -160,6 +183,10 @@ int Visual::setarVideo(int telaLargura, int telaAltura, bool telaCheia) {
 	this->telaLargura = telaLargura;
 	this->telaAltura = telaAltura;
 	this->telaCheia = telaCheia;
+
+#ifdef _WIN32
+	recarregaTexturas(); //inicializaOpenGL();
+#endif
 	
 	return 1;
 }
@@ -167,7 +194,6 @@ int Visual::setarVideo(int telaLargura, int telaAltura, bool telaCheia) {
 int Visual::setarTelaCheia(void) {
 	this->telaCheia = !this->telaCheia;
 	setarVideo(this->telaLargura, this->telaAltura,this->telaCheia);
-	
 	return 1;
 }	
 

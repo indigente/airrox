@@ -83,8 +83,7 @@ win: $(OBJS)
 
 # Compilacao (Linux e Windows)
 $(OBJS): %.o: %.cpp
-	g++ -c $< -o $@ $(FLAGS)
-# $(INCLUDEWIN)
+	g++ -c $< -o $@ $(FLAGS) $(INCLUDEWIN)
 
 # Apagar objetos pra comecar do zero
 clean:
