@@ -1,8 +1,30 @@
 #include "config.h"
 #include <iostream>
 #include <fstream>
+#include <ctype.h>
 
 using namespace std;
+
+/**
+ * Funcao auxiliar que remove espacos no inicio e no fim da string
+ * @param s Ponteiro para a string. O conteudo da string e' modificado.
+ * @return A propria string passada como parametro, com espacos removidos
+ */
+string *removeEspacos(string *s)
+{
+	int i;
+
+	// apaga espacos iniciais
+	while (s->size() && isspace(s->at(0)))
+		s->erase(0, 1);
+		
+	// apaga espacos finais
+	i = s->size() - 1;
+	while (i >= 0 && isspace(s->at(i)))
+		s->erase(i--, 1);
+		
+	return s;
+}
 
 /**
  * Retorna o ponteiro para um parametro
@@ -12,6 +34,8 @@ using namespace std;
 Parametro *Config::ponteiroParaParametro(string nome)
 {
 	int i;
+	
+	removeEspacos(&nome);
 	
 	for (i = 0; i < params.size(); i++)
 	{
@@ -37,6 +61,12 @@ Config::Config(string arquivo)
 	else {
 		cerr << "Config: erro ao abrir arquivo " << arquivo << endl;
 	}
+	
+	// DEBUG
+	string nos = "nos";
+	string dir = "dir ";
+	string esq = "  esq";
+	cout << (*removeEspacos(&nos)) << "-" << (*removeEspacos(&dir)) << "-" << (*removeEspacos(&esq)) << endl;
 }
 
 /** 
@@ -83,6 +113,7 @@ const void *Config::get(string param)
  */
 void Config::cria(string param, enum TipoDeParametro tipo)
 {
+	removeEspacos(&param);
 	if (!ponteiroParaParametro(param))
 		params.push_back(*(new Parametro(param, tipo)));
 	else
@@ -93,9 +124,11 @@ void Config::cria(string param, enum TipoDeParametro tipo)
 void Config::set(string param, string *valor)
 {
 	int *i = new int;
-	float *f = new float;
-	
+	float *f = new float;	
 	Parametro *p;
+	
+	removeEspacos(&param);
+	
 	if (p = ponteiroParaParametro(param)) {
 		switch (p->getTipo()) {
 			case INT:
@@ -140,6 +173,8 @@ void Config::carrega()
 		{
 			nome = linha.substr(0, pos1);
 			valor = new string(linha, pos1 + 1, linha.length() - (pos1 + 1));
+			removeEspacos(&nome);
+			removeEspacos(valor);
 			cout << "Teste: " << nome << "=" << *valor << endl;
 			this->set(nome, valor);
 		}
