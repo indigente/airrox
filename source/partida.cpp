@@ -76,9 +76,12 @@ void Partida::inicializa(int modo) {
 
 	
 	v.set(0,0,0);
+	//Vetor zerojb(-15,-80,0);
+	
 	disco->setPos(v);
 
 	v.set(-70, 103);
+	//v.set(0,0,0);
 	disco->setVel(v);
 
 	disco->setRaio(5);
@@ -147,21 +150,19 @@ void Partida::executa()
 		Vetor d = disco->getPos();
 		Vetor zero(10, 10, 0);
 		Vetor zerojc(15,-80,0);
-		Vetor zerojb(-15,80,0);
+	        Vetor zerojb(-15,80,0);
 		
 		if (d.x > -15 && d.x < 15) {
 			if (d.y < -100) {
 				jog[jc]->addPontuacao();
 				printf("pontuacao: %d a %d\n", jog[jc]->getPontuacao(), jog[jb]->getPontuacao());
 				disco->setPos(zero);
-				//disco->setVel(zero);
 				jogo->getAudio()->tocarFX("gol");
 			}
 			else if (d.y > 100) {
 				jog[jb]->addPontuacao();
 				printf("pontuacao: %d a %d\n", jog[jc]->getPontuacao(), jog[jb]->getPontuacao());
 				disco->setPos(zero);
-				//disco->setVel(zero);
 				jogo->getAudio()->tocarFX("gol");
 			}
 		}
