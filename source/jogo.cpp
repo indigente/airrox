@@ -36,6 +36,7 @@ using namespace std;
 #include "visual.h"
 #include "eventos.h"
 #include "audio.h"
+#include "console.h"
 #include "gui/menu.h"
 #include "gui/textwidget.h"
 // #include "conexao.h"
@@ -52,9 +53,9 @@ Jogo::Jogo() {
 // 	eventos = new Eventos(this);
 	partida = new Partida(this);
 	audio = new Audio();
-	this->menu();
+	console = new Console();	
 	
-	//partida->executa(); // TODO: desvincular inicio da partida do construtor de jogo
+	this->menu();
 }
 
 Jogo::~Jogo() {
@@ -63,6 +64,7 @@ Jogo::~Jogo() {
 	delete partida;
 	delete conexao;
 	delete audio;
+	delete console;
 }
 
 
@@ -202,7 +204,7 @@ void Jogo::menu() {
 			case 'M':
 				cout << "Multiplayer" << endl;
 				do {
-					cout << "ser(V)idor \n(C)liente" << endl;
+					cout << "ser(V)idor \n(C)liente \n(O)bservador" << endl;
 					cin >> c;
 					c = toupper(c);
 					switch (c) {
@@ -216,16 +218,20 @@ void Jogo::menu() {
 							partida->executa();
 							break;
 						case 'C':
+						case 'O':
 							cout << "Escolha o servidor:" << endl;
 							cout << "Host:  ";
 							cin >> host;
 							cout << "Porta: ";
 							cin >> porta;
-							partida->inicializa(MODO_MULTIPLAYER_CLIENTE);
+							if (c == 'C') // cliente jogador
+								partida->inicializa(MODO_MULTIPLAYER_CLIENTE);
+							else // cliente observador
+								partida->inicializa(MODO_OBSERVADOR);
 // 							conexao->cliente(host,porta,eventos->cliente);
 							conexao = new AirCliente(this->partida, 0);
-							SDL_WM_SetCaption("cliente",NULL); // DEBUG
-							((AirCliente *)(conexao))->conecta(host.c_str(), porta);
+							SDL_WM_SetCaption(c == 'C' ? "cliente" : "observador",NULL); // DEBUG
+							((AirCliente *)(conexao))->conecta(host.c_str(), porta, c == 'C');
 							partida->executa();
 							break;
 					}

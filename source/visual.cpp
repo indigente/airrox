@@ -26,6 +26,8 @@
 #include "jogador.h"
 #include "disco.h"
 #include "jogo.h"
+#include "console.h"
+#include <string>
 using namespace std;
 
 float gameFPS;
@@ -195,9 +197,9 @@ GLvoid Visual::matarJanela(GLvoid) {}
 
 /**************** Metodos auxiliares ***********************************/
 
-void Visual::EscreveString(float x, float y, void *font, char *string)
+void Visual::EscreveString(float x, float y, void *font, const char *string)
 {
-  char *c;
+  const char *c;
   glRasterPos2f(x, y);
   for (c=string; *c != '\0'; c++)
       glutBitmapCharacter(font, *c);
@@ -217,25 +219,6 @@ void Visual::Escrita2D(void) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	//glDisable(GL_LIGHTING);
-
-	//	glColor3f(1,1,1);
-	/*	sprintf(msg,"OBSV X: %.2f Y: %.2f Z: %.2f",camera.origem.x, camera.origem.y, camera.origem.z);
-	EscreveString(10,10,(void *)font,msg);
-
-	sprintf(msg,"ALVO X: %.2f Y: %.2f Z: %.2f",camera.alvo.x, camera.alvo.y, camera.alvo.z);
-	EscreveString(10,22,(void *)font,msg);
-	sprintf(msg,"Jogador 0  X: %.2f Y: %.2f Z: %.2f",jogador[0].pos.x, jogador[0].pos.y, 0);
-	EscreveString(10,50,(void *)font,msg);
-        sprintf(msg,"Disco   X: %.2f Y: %.2f Z: %.2f",bola.pos.x, bola.pos.y, 0);
-	EscreveString(10,60,(void *)font,msg);
-
-	sprintf(msg,"VBOLA: %.2f",bola.veltempo);
-	EscreveString(10,80,(void *)font,msg);
-
-	sprintf(msg,"V_JOG_1: %.2f  V_JOG_2: %.2f",jogador[0].vel.x,jogador[1].vel.x);
-	EscreveString(10,100,(void *)font,msg);
-*/
 	/////////////////////////////////////////////////////////
 	//Escrever Resolucao
 	/////////////////////////////////////////////////////////
@@ -252,24 +235,14 @@ void Visual::Escrita2D(void) {
 	gameFPS = retornaFPS(gameFPS);
 	sprintf(strFPS,"FPS:%.0f",gameFPS);
 	EscreveString(10,34,(void *)font,strFPS);
-	// DEBUG
-/*	char msg[256];
-	Vetor v = jogo->getPartida()->getDisco()->getPos();
-	sprintf(msg, "disco: %.1f %.1f %.1f", v.x, v.y, v.z);
-	EscreveString(10, 46, (void *)font, msg);
-	
-	v = jogo->getPartida()->getJog(0)->getPos();
-	sprintf(msg, "jog0: %.1f %.1f %.1f", v.x, v.y, v.z);
-	EscreveString(10, 58, (void *)font, msg);
-	
-	v = jogo->getPartida()->getJog(1)->getPos();
-	sprintf(msg, "jog1: %.1f %.1f %.1f", v.x, v.y, v.z);
-	EscreveString(10, 70, (void *)font, msg);
-
-	v = jogo->getPartida()->getDisco()->getVel();
-	sprintf(msg, "discovel: %.1f %.1f %.1f -- %.1f", v.x, v.y, v.z, v.norma());
-	EscreveString(10, 82, (void *)font, msg);*/
 	}
+	////////////////////////////////////////////////////////
+	//Escrever Console
+	/////////////////////////////////////////////////////////
+	Console *c = jogo->getConsole();
+	unsigned int i;
+	for (i = 1; i <= c->getTamanho(); i++)
+		EscreveString(10.0, 34.0 + 12.0 * i, (void *)font, c->getLinha(i).c_str());
 }
 
 void Visual::cylinder(float r, float h, int segs)

@@ -73,7 +73,7 @@ class Visual {
 		GLvoid matarJanela(GLvoid);
 		
 		void Escrita2D(void);
-		void EscreveString(float x, float y, void *font, char *string);
+		void EscreveString(float x, float y, void *font, const char *string);
 		void cylinder(float r, float h, int segs=8);
 
 		void defineCamera(void);

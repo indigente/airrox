@@ -13,7 +13,6 @@ bool AirServidor::recebeMensagem()
 	{
 		// o pacote foi recebido
 		case 1:
-			printf("pacote recebido (DEBUG)\n");
 			switch (pacote->channel)
 			{
 				// provavelmente alguem tentando conectar
@@ -104,7 +103,7 @@ void AirServidor::processaPedidoDeConexao()
 			case 1:
 				// aceita conexao
 				if (qtdJogadores < MAXJOGADORES) {
-					enviaRespostaDeConexao(TIPO_CONEXAO_ACEITA);
+					enviaRespostaDeConexao(TIPO_CONEXAO_ACEITA);					
 					this->bind(CANAL_JOGADOR, &this->pacote->address);
 					qtdJogadores++;
 				}
@@ -119,8 +118,8 @@ void AirServidor::processaPedidoDeConexao()
 			case 0:
 				// aceita conexao
 				if (qtdObservadores < MAXOBSERVADORES) {
-					enviaRespostaDeConexao(TIPO_CONEXAO_ACEITA);					
-					this->bind(CANAL_OBSERVADOR, &this->pacote->address);					
+					enviaRespostaDeConexao(TIPO_CONEXAO_ACEITA);
+					this->bind(CANAL_OBSERVADOR, &this->pacote->address);
 					qtdObservadores++;
 				}
 				// rejeita conexao

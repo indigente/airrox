@@ -25,9 +25,11 @@
 #define _PARTIDA_H
 
 #define MAXJOG 2
+
 #define MODO_SINGLEPLAYER 0
 #define MODO_MULTIPLAYER_CLIENTE  1
 #define MODO_MULTIPLAYER_SERVIDOR 2
+#define MODO_OBSERVADOR 3
 
 #include "jogo.h"
 #include "disco.h"

@@ -32,6 +32,7 @@ class Eventos;
 class Audio;
 // class Conexao;
 class AirRede;
+class Console;
 
 class Jogo {
 	private:
@@ -42,6 +43,7 @@ class Jogo {
 		Eventos *eventos;
 		Audio *audio;
 		AirRede *conexao;
+		Console *console;
 	
 	public:
 		Jogo();
@@ -58,6 +60,7 @@ class Jogo {
 // 		Conexao *getConexao() { return conexao; }
 		AirRede *getConexao() { return conexao; }
 		Audio *getAudio() { return audio; }
+		Console *getConsole() { return console; }
 };
 
 #endif

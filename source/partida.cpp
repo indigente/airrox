@@ -31,6 +31,7 @@
 #include "controle.h"
 #include "colisao.h"
 #include "camera.h"
+#include "console.h"
 // #include "conexao.h"
 // #include "eventos.h"
 #include "audio.h"
@@ -58,15 +59,21 @@ void Partida::inicializa(int modo) {
 		case MODO_SINGLEPLAYER:
 			jog[0] = new Jogador();
 			jog[1] = new JogadorIA(this);
+			jogo->getControle()->registra(jog[0], CON_MOUSE);
+			jogo->getControle()->registra(jog[1], CON_IA);
 			break;
 		case MODO_MULTIPLAYER_CLIENTE:
 		case MODO_MULTIPLAYER_SERVIDOR:
 			jog[0] = new Jogador();
 			jog[1] = new JogadorNet(this);
+			jogo->getControle()->registra(jog[0], CON_MOUSE);
+			break;
+		case MODO_OBSERVADOR:
+			jog[0] = new JogadorNet(this);
+			jog[1] = new JogadorNet(this);
 			break;
 	}
-	jogo->getControle()->registra(jog[0], CON_MOUSE);
-	jogo->getControle()->registra(jog[1], CON_IA);
+
 	colisao = new Colisao(disco, jog[0], jog[1]);
 	
 	if (modo == MODO_MULTIPLAYER_SERVIDOR || modo == MODO_SINGLEPLAYER)
@@ -139,11 +146,12 @@ void Partida::executa()
 		// rede
 		switch (this->modo) {
 			case MODO_MULTIPLAYER_SERVIDOR:
-// 				jogo->getEventos()->servidor(&sock, jogo);
-// 				break;
 			case MODO_MULTIPLAYER_CLIENTE:
 				jogo->getConexao()->enviaEstado();
-				while(jogo->getConexao()->recebeMensagem());				
+				while(jogo->getConexao()->recebeMensagem());
+				break;
+			case MODO_OBSERVADOR:
+				while(jogo->getConexao()->recebeMensagem());
 				break;
 		}
 
@@ -160,12 +168,14 @@ void Partida::executa()
 		if (d.x > -15 && d.x < 15) {
 			if (d.y < -100) {
 				jog[jc]->addPontuacao();
+				jogo->getConsole()->insere("GOL");
 				printf("pontuacao: %d a %d\n", jog[jc]->getPontuacao(), jog[jb]->getPontuacao());
 				disco->setPos(zero);
 				jogo->getAudio()->tocarFX("gol");
 			}
 			else if (d.y > 100) {
 				jog[jb]->addPontuacao();
+				jogo->getConsole()->insere("GOL");
 				printf("pontuacao: %d a %d\n", jog[jc]->getPontuacao(), jog[jb]->getPontuacao());
 				disco->setPos(zero);
 				jogo->getAudio()->tocarFX("gol");

@@ -39,6 +39,7 @@ visual.o \
 camera.o \
 colisao.o \
 comunicacao.o \
+console.o \
 gui/menuitem.o \
 gui/menu.o \
 gui/textwidget.o \
@@ -64,7 +65,7 @@ BINLINUX  = air
 BINWIN = $(BINLINUX).exe
 
 # flags (otimizacao e nao exibir warnings)
-FLAGS = -O2 -DREENTRANT -DHAVE_OPENGL# -g 
+FLAGS = -O2 -DREENTRANT -DHAVE_OPENGL #-g 
 
 INCLUDEWIN = -I$(DEVCPP_PATH)\include -I$(DEVCPP_PATH)\include\c++ -I$(DEVCPP_PATH)\include\c++\mingw32 -I$(DEVCPP_PATH)\include\c++\backward
 

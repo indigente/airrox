@@ -3,10 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool AirCliente::conecta(const char *host, Uint16 porta)
+bool AirCliente::conecta(const char *host, Uint16 porta, bool comoJogador)
 {
 	IPaddress ip;
 	int ret;
+	int canal;
 	
 	if (!this->conectado)
 	{
@@ -17,7 +18,9 @@ bool AirCliente::conecta(const char *host, Uint16 porta)
 			return false;
 		}
 
-		ret = SDLNet_UDP_Bind(this->sock, CANAL_JOGADOR, &ip);
+		this->canal = (comoJogador ? CANAL_JOGADOR : CANAL_OBSERVADOR);
+		
+		ret = SDLNet_UDP_Bind(this->sock, this->canal, &ip);
 		if (ret == -1)
 		{
 			printf("AirCliente::conecta: %s\n", SDLNet_GetError());
@@ -35,11 +38,11 @@ void AirCliente::enviaPedidoDeConexao()
 	msgConectar *m = (msgConectar *)this->pacote->data;
 	
 	m->tipo = TIPO_CONECTAR;
-	m->comoJogador = 1;
+	m->comoJogador = (this->canal == CANAL_JOGADOR ? 1 : 0);
 	
 	this->pacote->len = sizeof(msgConectar);
 	
-	this->envia(CANAL_JOGADOR, this->pacote);
+	this->envia(this->canal, this->pacote);
 }
 
 bool AirCliente::recebeMensagem()
@@ -66,6 +69,10 @@ bool AirCliente::recebeMensagem()
 					return true;
 				// mensagem de um observador
 				case CANAL_OBSERVADOR:
+					if (this->conectado)
+						processaMensagemDoJogador();
+					else
+						recebeRespostaDeConexao();
 					return true;
 			}
 			break;
@@ -91,6 +98,10 @@ void AirCliente::processaMensagemDoJogador()
 			partida->getJog(1)->setPontuacao(m->pontserv);
 			partida->getJog(0)->setPontuacao(m->pontcli);
 			partida->getJog(1)->setPos(m->servpos);
+			
+			// se eh observador, usa a posicao do jogador cliente
+			if (this->canal == CANAL_OBSERVADOR)
+				partida->getJog(0)->setPos(m->clipos);
 			
 			break;
 	}

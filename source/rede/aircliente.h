@@ -13,6 +13,7 @@ class AirCliente : public AirRede
 // 		UDPpacket *pacote;
 		
 		bool conectado;
+		int canal; // CANAL_JOGADOR ou CANAL_OBSERVADOR
 		
 // 		void processaPedidoDeConexao();
 // 		void enviaRespostaDeConexao(char tipo);
@@ -28,8 +29,7 @@ class AirCliente : public AirRede
 		
 		~AirCliente() {};
 		
-		bool conecta(const char *host, Uint16 porta);
-		
+		bool conecta(const char *host, Uint16 porta, bool comoJogador);
 		bool recebeMensagem();
 		void enviaEstado();
 };
