@@ -1,0 +1,8 @@
+A rede funcionará da seguinte maneira:
+
+Haverá, inicialmente, um servidor e um cliente.
+O servidor será não-dedicado, isto é, ele também será um jogador.
+O jogador cliente se conecta ao jogador servidor para jogar.
+Até 4 observadores poderão se conectar ao servidor para observar a partida.
+O servidor envia informações de seu mallet e do puck para o outro jogador.
+O servidor envia informações dos mallets e do puck para os observadores.

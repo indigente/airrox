@@ -1,36 +1,39 @@
-#ifndef _NET_HPP
-#define _NET_HPP
+#ifndef _REDE_HPP
+#define _REDE_HPP
 
 #include <SDL/SDL_net.h>
 
-enum NetType
-{
-	CLIENT,
-	SERVER
-};
 
-class Net
+/**
+ * Classe 'wrapper' para funcoes da biblioteca SDL_net comuns
+ * a cliente e servidor.
+ */
+class Rede
 {
 	protected:
-		enum NetType netType;
-		// reservados para o servidor
-		TCPsocket listeningTCPsocket;
-		UDPsocket listeningUDPsocket;
-		
-		// reservados para o servidor
-		
-		// conjunto de sockets
-		SDLNet_SocketSet socketset;
+		UDPsocket sock;
+		Uint16 porta;
 
-		UDPpacket *packet;
-		
 	public:	
-		Net(enum NetType netType);
-		~Net();
+		Rede();
+		~Rede();
 		
-		void initServer(Uint16 port);
-		void connectToServer(Uint32 host, Uint16 port);
+		// enviar/receber
+		int envia(int canal, UDPpacket *pacote);
+		int recebe(UDPpacket *pacote);
 		
+		// manipulacao de canais
+		int bind(int canal, IPaddress *ip);
+		void unbind(int canal);
+		
+		// abrir/fechar porta
+		int abre(Uint16 porta);
+		void fecha();
+		
+		// acesso a variaveis
+		UDPsocket getSocket() { return sock; }
+		Uint16 getPorta() { return porta; }
+};
 
 /*
 static TCPsocket tcpsock = NULL;
@@ -38,6 +41,6 @@ static UDPsocket udpsock = NULL;
 static SDLNet_SocketSet socketset = NULL;
 static UDPpacket **packets = NULL;
 */
-};
 
 #endif
+
