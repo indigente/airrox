@@ -1,3 +1,9 @@
+#ifndef _AIRREDE_H
+#define _AIRREDE_H
+
+#include "rede.h"
+#include "SDL/SDL_net.h"
+
 // arquivo comum para cliente e servidor
 
 #include "../vetor.h"
@@ -9,7 +15,7 @@
 #define MAXBUF 256
 
 // posicao do jogador. enviado pelo cliente para o servidor.
-#define TIPO_POS        1 
+#define TIPO_POSICAO    1 
 // estado do jogo. enviado pelo servidor para os clientes (jogador e observador).
 #define TIPO_ESTADO     2
 // alguem tentando conectar.
@@ -19,7 +25,6 @@
 
 #define TIPO_CONEXAO_ACEITA 5
 #define TIPO_CONEXAO_REJEITADA 6
-
 
 
 struct msgPura
@@ -48,4 +53,33 @@ struct msgEstado {
 	Vetor servpos; // posicao do servidor
 	Vetor clipos; // posicao do cliente
 };
+
+
+
+
+class Partida;
+
+class AirRede : public Rede
+{
+	protected:
+		Partida *partida;
+		UDPpacket *pacote;
+		
+/*		int qtdJogadores;
+		int qtdObservadores;
+
+		void processaPedidoDeConexao();
+		void enviaRespostaDeConexao(char tipo);
+*/
+	public:
+		AirRede(Partida *partida, Uint16 porta);
+		~AirRede();
+		
+// 		bool conecta(char *host, Uint16 porta) {};
+		
+		virtual bool recebeMensagem()=0;
+		virtual void enviaEstado()=0;
+};
+
+#endif
 

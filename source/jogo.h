@@ -28,18 +28,20 @@
 class Partida;
 class Controle;
 class Visual;
-class Conexao;
 class Eventos;
 class Audio;
+// class Conexao;
+class AirRede;
 
 class Jogo {
 	private:
 		Partida *partida;
 		Controle *controle;
 		Visual *visual;
-		Conexao *conexao;
+// 		Conexao *conexao;
 		Eventos *eventos;
 		Audio *audio;
+		AirRede *conexao;
 	
 	public:
 		Jogo();
@@ -53,7 +55,8 @@ class Jogo {
 		Eventos *getEventos() { return eventos; }
 		Controle *getControle() { return controle; }
 		Visual *getVisual() { return visual; }
-		Conexao *getConexao() { return conexao; }
+// 		Conexao *getConexao() { return conexao; }
+		AirRede *getConexao() { return conexao; }
 		Audio *getAudio() { return audio; }
 };
 

@@ -31,9 +31,10 @@
 #include "controle.h"
 #include "colisao.h"
 #include "camera.h"
-#include "conexao.h"
-#include "eventos.h"
+// #include "conexao.h"
+// #include "eventos.h"
 #include "audio.h"
+#include "rede/airrede.h"
 
 Partida::Partida(Jogo *j)
 {
@@ -126,7 +127,7 @@ void Partida::executa()
 {
 	float tempo=0;
 	float initempo, fimtempo;
-	int sock = jogo->getConexao()->getSocket();
+// 	int sock = jogo->getConexao()->getSocket();
 	
 	jogo->getAudio()->tocarMusica();
 
@@ -135,15 +136,18 @@ void Partida::executa()
 		
 		jogo->getControle()->processaEventos();
 
+		// rede
 		switch (this->modo) {
 			case MODO_MULTIPLAYER_SERVIDOR:
-				jogo->getEventos()->servidor(&sock, jogo);
-				break;
+// 				jogo->getEventos()->servidor(&sock, jogo);
+// 				break;
 			case MODO_MULTIPLAYER_CLIENTE:
-				jogo->getEventos()->cliente(&sock, jogo);
+				jogo->getConexao()->enviaEstado();
+				while(jogo->getConexao()->recebeMensagem());				
 				break;
 		}
 
+		// audio da colisao
 		if ( colisao->checa()>0)
 			jogo->getAudio()->tocarFX("colisaodiscojogador");
 		

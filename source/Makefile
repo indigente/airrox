@@ -30,7 +30,6 @@ disco.o \
 jogador.o \
 jogadorIA.o \
 jogadorNet.o \
-eventos.o \
 jogo.o \
 main.o \
 objeto.o \
@@ -40,13 +39,17 @@ visual.o \
 camera.o \
 colisao.o \
 comunicacao.o \
-conexao.o \
 gui/menuitem.o \
 gui/menu.o \
 gui/textwidget.o \
-net.o \
+rede/rede.o \
+rede/airrede.o \
+rede/airservidor.o \
+rede/aircliente.o \
 $(LOADER3D_PATH)/texture.o \
 $(LOADER3D_PATH)/3dsloader.o
+#conexao.o \
+#eventos.o \
 
 # bibliotecas para Linux
 LIBSLINUX = -L/usr/X11R6/lib -lGL -lGLU -lglut -L/usr/lib -lSDL_mixer -lSDL -lpthread `sdl-config --cflags --libs` -lSDL_net

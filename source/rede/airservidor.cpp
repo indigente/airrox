@@ -3,32 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*		Partida *partida;
-		UDPpacket *pacote;*/
-
-AirServidor::AirServidor(Partida *partida, Uint16 porta)
-{
-	this->qtdJogadores = 0;
-	this->qtdObservadores = 0;
-	
-	pacote = SDLNet_AllocPacket(MAXBUF);
-	
-	if (!partida) {
-		printf("AirServidor::AirServidor: partida == NULL!\n");
-		exit(2);
-	}
-	this->partida = partida;
-	
-	this->abre(porta);
-}
-
-AirServidor::~AirServidor()
-{
-	SDLNet_FreePacket(pacote);
-	this->fecha();
-}
-
-void AirServidor::recebeMensagens()
+bool AirServidor::recebeMensagem()
 {
 	int ret;
 	
@@ -44,26 +19,42 @@ void AirServidor::recebeMensagens()
 				// provavelmente alguem tentando conectar
 				case -1:
 					this->processaPedidoDeConexao();
-					break;
+					return true;
 				// mensagem do jogador
 				case CANAL_JOGADOR:
-					break;
+					processaMensagemDoJogador();
+					return true;
 				// mensagem de um observador
 				case CANAL_OBSERVADOR:
-					break;
+					return true;
 			}
 			break;
 		// nao foi recebido nenhum pacote
 		case 0:
-			break;
+			return false;
 		// erro
 		case -1:
 			printf("AirServidor::recebeMensagens: %s\n", SDLNet_GetError());
-			break;
+			return false;
 	}
 }
 
+void AirServidor::processaMensagemDoJogador()
+{
+	switch (this->pacote->data[0])
+	{
+		case TIPO_POSICAO:
+			msgPosicao *m = (msgPosicao *)this->pacote->data;
 
+// 			partida->getDisco()->setPos(m->discopos);
+// 			partida->getDisco()->setVel(m->discovel);
+// 			partida->getJog(1)->setPontuacao(m->pontserv);
+// 			partida->getJog(0)->setPontuacao(m->pontcli);
+			partida->getJog(1)->setPos(m->jogpos);
+			
+			break;
+	}
+}
 
 void AirServidor::enviaEstado()
 {

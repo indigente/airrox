@@ -6,23 +6,29 @@
 
 class Partida;
 
-class AirServidor : public Rede
+class AirServidor : public AirRede
 {
 	protected:
-		Partida *partida;
-		UDPpacket *pacote;
+// 		Partida *partida;
+// 		UDPpacket *pacote;
 		
 		int qtdJogadores;
 		int qtdObservadores;
 		
 		void processaPedidoDeConexao();
 		void enviaRespostaDeConexao(char tipo);
+		void processaMensagemDoJogador();
 		
 	public:
-		AirServidor(Partida *partida, Uint16 porta);
-		~AirServidor();
+		AirServidor(Partida *partida, Uint16 porta) : AirRede(partida, porta)
+		{
+			this->qtdJogadores = 0;
+			this->qtdObservadores = 0;
+		}
 		
-		void recebeMensagens();
+		~AirServidor() {};
+		
+		bool recebeMensagem();
 		void enviaEstado();
 };
 

@@ -34,21 +34,24 @@ using namespace std;
 #include "partida.h"
 #include "controle.h"
 #include "visual.h"
-#include "conexao.h"
 #include "eventos.h"
 #include "audio.h"
 #include "gui/menu.h"
 #include "gui/textwidget.h"
+// #include "conexao.h"
+#include "rede/aircliente.h"
+#include "rede/airservidor.h"
 
 Jogo::Jogo() {
 	
-	visual = new Visual(this,640,480,false,"AirRox 0.1 BETA");
+// 	visual = new Visual(this,640,480,false,"AirRox 0.1 BETA");
+	visual = new Visual(this,320,240,false,"AirRox 0.1 BETA");
+	
 	controle = new Controle(this);
-	conexao = new Conexao(this);
-	eventos = new Eventos(this);
+// 	conexao = new Conexao(this);
+// 	eventos = new Eventos(this);
 	partida = new Partida(this);
 	audio = new Audio();
-//	gui = new Gui();
 	this->menu();
 	
 	//partida->executa(); // TODO: desvincular inicio da partida do construtor de jogo
@@ -104,39 +107,37 @@ void Jogo::eventos(void *param, void *objeto){
 }
 */
 
-
+/*
 void Jogo::menu() {
 	int ret = 0;
 	int i;
 #define MENU_JOGAR 2
 #define MENU_SAIR  3
 
-/*
-	TextWidget *text = new TextWidget(20, 20, 50);
-	vector<char> lastScanCodes;
-	
-	glViewport(0, 0, SDL_GetVideoSurface()->w, SDL_GetVideoSurface()->h);	
-	glClearColor(0.2, 0.2, 0.2, 1.0);
-	glColor3f(1.0, 1.0, 1.0);
+// 	TextWidget *text = new TextWidget(20, 20, 50);
+// 	vector<char> lastScanCodes;
+// 	
+// 	glViewport(0, 0, SDL_GetVideoSurface()->w, SDL_GetVideoSurface()->h);	
+// 	glClearColor(0.2, 0.2, 0.2, 1.0);
+// 	glColor3f(1.0, 1.0, 1.0);
+// 
+// 	
+// 	while (!ret)
+// 	{
+// 
+// //		controle->processaEventos();
+// //		for (i = 0; i < controle->getLastKeys().size(); i++) {
+// //			text->update(controle->getLastKeys()[i]);
+// //			printf("caracter: %c\n", controle->getLastKeys()[i]);
+// //		}
+// 
+// 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+// 		glRasterPos2i(20, 20);
+// 		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'a');
+// 
+// 		SDL_GL_SwapBuffers();
+// 	}
 
-	
-	while (!ret)
-	{
-
-//		controle->processaEventos();
-//		lastScanCodes = controle->getLastScanCodes();
-//		for (i = 0; i < controle->getLastScanCodes().size(); i++) {
-//			text->update(controle->getLastScanCodes()[i]);
-//			printf("caracter: %c\n", controle->getLastScanCodes()[i]);
-//		}
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glRasterPos2i(20, 20);
-		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'a');
-
-		SDL_GL_SwapBuffers();
-	}
-*/
 	
 	Menu *menu = new Menu();
 
@@ -151,6 +152,7 @@ void Jogo::menu() {
 
 	while (!ret)
 	{
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		controle->processaEventos();
 		ret = menu->update(controle->getMouseX(), 
 		  controle->getMouseY(), controle->getMouseButton());
@@ -172,8 +174,9 @@ void Jogo::menu() {
 	}
 	
 }
+*/
 
-/*
+
 void Jogo::menu() {
 	//Menu bizarro temporario
 	char b,c;
@@ -207,7 +210,9 @@ void Jogo::menu() {
 							cout << "Escolha a porta:" << endl;
 							cin >> porta;
 							partida->inicializa(MODO_MULTIPLAYER_SERVIDOR);
-							conexao->servidor(porta,eventos->servidor);
+// 							conexao->servidor(porta,eventos->servidor);
+							conexao = new AirServidor(this->partida, porta);
+							SDL_WM_SetCaption("servidor",NULL); // DEBUG
 							partida->executa();
 							break;
 						case 'C':
@@ -217,7 +222,10 @@ void Jogo::menu() {
 							cout << "Porta: ";
 							cin >> porta;
 							partida->inicializa(MODO_MULTIPLAYER_CLIENTE);
-							conexao->cliente(host,porta,eventos->cliente);
+// 							conexao->cliente(host,porta,eventos->cliente);
+							conexao = new AirCliente(this->partida, 0);
+							SDL_WM_SetCaption("cliente",NULL); // DEBUG
+							((AirCliente *)(conexao))->conecta(host.c_str(), porta);
 							partida->executa();
 							break;
 					}
@@ -228,7 +236,6 @@ void Jogo::menu() {
 	} while (c != 'S');
 	this->quitGame(0);
 }
-*/
 
 void Jogo::quitGame(int code) {
 	SDL_Quit();
