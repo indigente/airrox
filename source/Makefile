@@ -39,6 +39,8 @@ visual.o \
 camera.o \
 colisao.o \
 console.o \
+parametro.o \
+config.o \
 gui/menuitem.o \
 gui/menu.o \
 gui/textwidget.o \
