@@ -89,6 +89,7 @@ void Controle::processaEventos(){
 	Vetor v;
 
 	lastKeys.clear();
+	lastScanCodes.clear();
 
 	while (SDL_PollEvent( &evento) ) {
 		switch (evento.type) {
@@ -154,6 +155,7 @@ void Controle::processaEventos(){
 			case SDL_KEYDOWN:
 				this->KeyBuffer[evento.key.keysym.sym] = 1;
 				lastKeys.push_back(evento.key.keysym.sym);
+				lastScanCodes.push_back(evento.key.keysym.scancode);
 				
 				switch (evento.key.keysym.sym) {
 					// Audio

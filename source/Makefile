@@ -43,6 +43,7 @@ comunicacao.o \
 conexao.o \
 gui/menuitem.o \
 gui/menu.o \
+gui/textwidget.o \
 $(LOADER3D_PATH)/texture.o \
 $(LOADER3D_PATH)/3dsloader.o
 
@@ -59,7 +60,7 @@ BINLINUX  = air
 BINWIN = $(BINLINUX).exe
 
 # flags (otimizacao e nao exibir warnings)
-FLAGS = -O2 -DREENTRANT -DHAVE_OPENGL #-g 
+FLAGS = -O2 -DREENTRANT -DHAVE_OPENGL -g 
 
 INCLUDEWIN = -I$(DEVCPP_PATH)\include -I$(DEVCPP_PATH)\include\c++ -I$(DEVCPP_PATH)\include\c++\mingw32 -I$(DEVCPP_PATH)\include\c++\backward
 

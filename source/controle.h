@@ -54,6 +54,7 @@ class Controle {
 		int mouseButton;
 		char KeyBuffer[SDLK_LAST];
 		vector<SDLKey> lastKeys; // ultimas teclas pressionadas
+		vector<Uint8> lastScanCodes;
 		
 	public:
 		Controle(Jogo *j, float SENSIBILIDADE = 0.75);
@@ -68,6 +69,7 @@ class Controle {
 		int getMouseButton() { return this->mouseButton; }
 		int getKeyState(SDLKey key) { return (key <= SDLK_LAST) ? KeyBuffer[key] : 0; }
 		vector<SDLKey> getLastKeys() { return lastKeys; }
+		vector<Uint8> getLastScanCodes() { return lastScanCodes; }
 };
 #endif
 
