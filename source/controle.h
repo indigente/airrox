@@ -25,12 +25,15 @@
 #define _CONTROLE_H
 
 #include <SDL/SDL.h>
+#include <vector>
 #include "partida.h" // MAXJOG
 
 #define CON_MOUSE 1
 #define CON_TECLADO 2
 #define CON_JOYSTICK 4
 #define CON_IA 8
+
+using std::vector;
 
 class Jogo;
 

@@ -30,6 +30,8 @@
 #include "visual.h"
 #include "audio.h"
 
+using std::vector;
+
 Controle::Controle(Jogo *j, float SENSIBILIDADE) {
 	jogo = j;
 
