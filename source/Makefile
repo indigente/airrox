@@ -44,6 +44,7 @@ conexao.o \
 gui/menuitem.o \
 gui/menu.o \
 gui/textwidget.o \
+net.o \
 $(LOADER3D_PATH)/texture.o \
 $(LOADER3D_PATH)/3dsloader.o
 
