@@ -95,6 +95,7 @@ class Visual {
 		void iniciaEscrita2D();
 		void fim();
 
+		void carregaTexturas();
 		void recarregaTexturas();
 		void inicializaOpenGL();
 };

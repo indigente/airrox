@@ -95,6 +95,10 @@ void Controle::processaEventos(){
 
 	while (SDL_PollEvent( &evento) ) {
 		switch (evento.type) {
+			case SDL_QUIT:
+				// isso esta causando falhas no Windows
+				SDL_Quit();
+				break;
 			case SDL_MOUSEBUTTONUP:
 				this->mouseButton &= ~(1 << evento.button.button);
 				break;

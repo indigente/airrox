@@ -261,7 +261,7 @@ int Jogo::entradaDeTexto(TextWidget *text)
 {
 	int i;
 	int pronto = 0;
-	
+
 	controle->processaEventos();
 	for (i = 0; i < controle->getLastKeys().size(); i++) {
 		if (controle->getLastKeys()[i] < 128)
@@ -325,21 +325,21 @@ void Jogo::menu() {
 #define MENU_OBSERVAR 5
 #define MENU_SAIR  6
 
-	Menu *menu = new Menu();
-
-	menu->addItem(MENU_JOGAR_PC, "../imagens/mjogar1.bmp",
-	  "../imagens/mjogar1h.bmp", 0, 20, LEFT);
-	menu->addItem(MENU_JOGAR_SERVIDOR, "../imagens/mjogar2.bmp",
-	  "../imagens/mjogar2h.bmp", 0, 60, LEFT);
-	menu->addItem(MENU_JOGAR_CLIENTE, "../imagens/mjogar3.bmp",
-	  "../imagens/mjogar3h.bmp", 0, 100, LEFT);
-	menu->addItem(MENU_OBSERVAR, "../imagens/mobs.bmp",
-	  "../imagens/mobsh.bmp", 0, 140, LEFT);
-	menu->addItem(MENU_SAIR, "../imagens/msair.bmp",
-	  "../imagens/msairh.bmp", 0, 180, LEFT);
-	  
 	while (1)
 	{
+		Menu *menu = new Menu();
+
+		menu->addItem(MENU_JOGAR_PC, "../imagens/mjogar1.bmp",
+		  "../imagens/mjogar1h.bmp", 0, 20, LEFT);
+		menu->addItem(MENU_JOGAR_SERVIDOR, "../imagens/mjogar2.bmp",
+		  "../imagens/mjogar2h.bmp", 0, 60, LEFT);
+		menu->addItem(MENU_JOGAR_CLIENTE, "../imagens/mjogar3.bmp",
+		  "../imagens/mjogar3h.bmp", 0, 100, LEFT);
+		menu->addItem(MENU_OBSERVAR, "../imagens/mobs.bmp",
+		  "../imagens/mobsh.bmp", 0, 140, LEFT);
+		menu->addItem(MENU_SAIR, "../imagens/msair.bmp",
+		  "../imagens/msairh.bmp", 0, 180, LEFT);
+			
 		menu->init();
 		
 		SDL_ShowCursor(SDL_ENABLE);
@@ -355,6 +355,8 @@ void Jogo::menu() {
 		
 		SDL_ShowCursor(SDL_DISABLE);
 		menu->deinit();
+
+		delete menu;
 	
 		switch (ret)
 		{

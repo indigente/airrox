@@ -47,9 +47,20 @@ Visual::Visual(Jogo *j, int telaLargura, int telaAltura, bool telaCheia, string 
 	Load3DS(&puck,"../meshs/puck.3ds");
 	Load3DS(&placar,"../meshs/placar.3ds");
 
-	criarJanela();	
+	criarJanela();
+	
+	SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
+	SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
+	SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
+	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16);
+	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+	SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE,5);
+
+
 	setarVideo(telaLargura, telaAltura, telaCheia);
+
 	inicializaOpenGL();
+	carregaTexturas();		
 
 	/* Camera */
 	Vetor origem(0,-180,100), alvo(0,0,0);
@@ -60,12 +71,6 @@ Visual::Visual(Jogo *j, int telaLargura, int telaAltura, bool telaCheia, string 
 
 void Visual::inicializaOpenGL()
 {
-	SDL_GL_SetAttribute( SDL_GL_RED_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_GREEN_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_BLUE_SIZE, 5 );
-	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 16);
-	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-	SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE,5);
 
 	glViewport(0,0,this->telaLargura,this->telaAltura);
 	
@@ -95,6 +100,11 @@ void Visual::inicializaOpenGL()
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	
+	glClearColor(0.0f,0.0f,0.0f,1.0f);
+}
+
+void Visual::carregaTexturas()
+{
 	/*TODO criar uma variavel Path de texturas e meshs*/
 	mesa.id_texture=LoadBitmap("../texturas/mesa.bmp");
 	mallet.id_texture=LoadBitmap("../texturas/mallet.bmp");
@@ -130,7 +140,7 @@ void Visual::inicializaOpenGL()
 		std::cout << "Image file: placar.bmp not found\n" << std::endl;
 		exit (0);
 	}
-	glClearColor(0.0f,0.0f,0.0f,1.0f);
+
 }
 
 void Visual::recarregaTexturas()
@@ -145,6 +155,7 @@ void Visual::recarregaTexturas()
 	glDeleteTextures(8, (const GLuint *)display);
 	glDeleteTextures(1, (const GLuint *)&logomesa);
 
+	carregaTexturas();
 	inicializaOpenGL();
 #endif
 }
