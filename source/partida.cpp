@@ -80,7 +80,8 @@ void Partida::inicializa(int modo) {
 	
 	disco->setPos(v);
 
-	v.set(-70, 103);
+//	v.set(-70, 103);
+	v.set(-120, 150);
 	//v.set(0,0,0);
 	disco->setVel(v);
 

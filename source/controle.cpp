@@ -49,6 +49,8 @@ Controle::Controle(Jogo *j, float SENSIBILIDADE) {
 		jog[i].controle = 0;
 	}
 	qtdjog = 0;
+
+	mouseButton = 0;
 }
 
 void Controle::registra(Jogador *j, int controle) {
@@ -86,7 +88,15 @@ void Controle::processaEventos(){
 
 	while (SDL_PollEvent( &evento) ) {
 		switch (evento.type) {
+			case SDL_MOUSEBUTTONUP:
+				this->mouseButton -= evento.button.button;
+				break;
+				
 			case SDL_MOUSEBUTTONDOWN:
+				this->mouseX = evento.button.x;
+				this->mouseY = evento.button.y;
+				this->mouseButton += evento.button.button;
+				
 		 		switch (evento.button.button) {
 					
 					case SDL_BUTTON_WHEELUP:
@@ -104,6 +114,9 @@ void Controle::processaEventos(){
 							//printf("botao:%d\n",evento.button.button);
 				 break;
 			case SDL_MOUSEMOTION:
+				this->mouseX = evento.motion.x;
+				this->mouseY = evento.motion.y;
+				
 				float xrel, yrel; // posicao do mouse relativa aa ultima posicao
 				xrel = (float) evento.motion.xrel * SENSIBILIDADE;
 				yrel = (float) evento.motion.yrel * SENSIBILIDADE;

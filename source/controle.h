@@ -36,6 +36,9 @@ class Jogo;
 
 class Controle {
 	private:
+		int mouseX, mouseY;
+		int mouseButton;
+		
 		Jogo *jogo;
 		float SENSIBILIDADE;
 		char KeyBuffer[SDLK_LAST];
@@ -53,6 +56,10 @@ class Controle {
 		void desregistra(Jogador *j);
 		
 		void processaEventos();
+
+		int getMouseX() { return this->mouseX; }
+		int getMouseY() { return this->mouseY; }
+		int getMouseButton() { return this->mouseButton; }
 };
 #endif
 

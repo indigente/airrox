@@ -37,6 +37,7 @@ using namespace std;
 #include "conexao.h"
 #include "eventos.h"
 #include "audio.h"
+#include "menu.h"
 
 Jogo::Jogo() {
 	
@@ -98,6 +99,48 @@ void Jogo::eventos(void *param, void *objeto){
 		Comunicacao::enviarMsg(socket,msg);
 		
 	}	
+}
+*/
+
+/*
+void Jogo::menu() {
+	int ret = 0;
+#define MENU_JOGAR 2
+#define MENU_SAIR  3
+	
+	Menu *menu = new Menu();
+
+	menu->addItem(MENU_JOGAR, "../imagens/mjogar.bmp",
+	  "../imagens/mjogarh.bmp", 0, 40, CENTER);
+	menu->addItem(MENU_SAIR, "../imagens/mjogar.bmp",
+	  "../imagens/mjogarh.bmp", 0, 80, CENTER);
+
+	SDL_ShowCursor(SDL_ENABLE);
+
+	while (!ret)
+	{
+		controle->processaEventos();
+		ret = menu->update(controle->getMouseX(), 
+		  controle->getMouseY(), controle->getMouseButton() != 0);
+//		SDL_UpdateRect(SDL_GetVideoSurface(), 0, 0, 0, 0);
+//		SDL_Flip(SDL_GetVideoSurface());
+//		SDL_GL_SwapBuffers();
+	}
+	
+	SDL_ShowCursor(SDL_DISABLE);
+
+	switch (ret)
+	{
+		case MENU_JOGAR:
+			partida->inicializa(MODO_SINGLEPLAYER);
+			partida->executa();
+			break;
+		case MENU_SAIR:
+			this->quitGame(0);
+			break;
+	}
+
+	
 }
 */
 

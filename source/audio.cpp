@@ -62,6 +62,8 @@ Audio::Audio() {
 		carregarPlaylist();
 		carregarfxs();
 	}	
+	
+	Mix_VolumeMusic(Mix_VolumeMusic(-1)-30);
 }
 
 Audio::~Audio() {
