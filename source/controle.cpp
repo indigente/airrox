@@ -29,6 +29,7 @@
 #include "camera.h"
 #include "visual.h"
 #include "audio.h"
+#include <ctype.h>
 
 using std::vector;
 
@@ -43,6 +44,9 @@ Controle::Controle(Jogo *j, float SENSIBILIDADE) {
 	SDL_ShowCursor(SDL_DISABLE);
 	// torna os controles exclusivos para o jogo
 	//SDL_WM_GrabInput(SDL_GRAB_ON);
+	
+	// Ativa unicode
+// 	SDL_EnableUNICODE(1);
 
 	// Inicializa sem jogadores registrados
 	int i;
@@ -89,7 +93,6 @@ void Controle::processaEventos(){
 	Vetor v;
 
 	lastKeys.clear();
-	lastScanCodes.clear();
 
 	while (SDL_PollEvent( &evento) ) {
 		switch (evento.type) {
@@ -154,8 +157,14 @@ void Controle::processaEventos(){
 				break;
 			case SDL_KEYDOWN:
 				this->KeyBuffer[evento.key.keysym.sym] = 1;
+				if (evento.key.keysym.sym <= 127 && 
+				 isalpha(evento.key.keysym.sym) && 
+				 (this->KeyBuffer[SDLK_LSHIFT] ||
+				 this->KeyBuffer[SDLK_RSHIFT]))
+					evento.key.keysym.sym = (SDLKey)toupper((char)evento.key.keysym.sym);
 				lastKeys.push_back(evento.key.keysym.sym);
-				lastScanCodes.push_back(evento.key.keysym.scancode);
+// 				if (evento.key.keysym.unicode & 0xFF80 == 0 )
+// 					lastKeys.push_back(evento.key.keysym.unicode & 0x7F);
 				
 				switch (evento.key.keysym.sym) {
 					// Audio

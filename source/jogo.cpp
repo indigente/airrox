@@ -46,7 +46,7 @@ using namespace std;
 Jogo::Jogo() {
 	
 // 	visual = new Visual(this,640,480,false,"AirRox 0.1 BETA");
-	visual = new Visual(this,320,240,false,"AirRox 0.1 BETA");
+	visual = new Visual(this,320,240,false,"AirRox 0.0.3 ALFA");
 	
 	controle = new Controle(this);
 // 	conexao = new Conexao(this);
@@ -116,31 +116,6 @@ void Jogo::menu() {
 #define MENU_JOGAR 2
 #define MENU_SAIR  3
 
-// 	TextWidget *text = new TextWidget(20, 20, 50);
-// 	vector<char> lastScanCodes;
-// 	
-// 	glViewport(0, 0, SDL_GetVideoSurface()->w, SDL_GetVideoSurface()->h);	
-// 	glClearColor(0.2, 0.2, 0.2, 1.0);
-// 	glColor3f(1.0, 1.0, 1.0);
-// 
-// 	
-// 	while (!ret)
-// 	{
-// 
-// //		controle->processaEventos();
-// //		for (i = 0; i < controle->getLastKeys().size(); i++) {
-// //			text->update(controle->getLastKeys()[i]);
-// //			printf("caracter: %c\n", controle->getLastKeys()[i]);
-// //		}
-// 
-// 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-// 		glRasterPos2i(20, 20);
-// 		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, 'a');
-// 
-// 		SDL_GL_SwapBuffers();
-// 	}
-
-	
 	Menu *menu = new Menu();
 
 	menu->addItem(MENU_JOGAR, "../imagens/mjogar.bmp",
@@ -152,18 +127,35 @@ void Jogo::menu() {
 
 	SDL_ShowCursor(SDL_ENABLE);
 
-	while (!ret)
+	do
 	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 		controle->processaEventos();
 		ret = menu->update(controle->getMouseX(), 
 		  controle->getMouseY(), controle->getMouseButton());
 		SDL_GL_SwapBuffers();
-	}
+	} while (!ret);
 	
 	SDL_ShowCursor(SDL_DISABLE);
 	menu->deinit();
 
+	ret = 0;
+	TextWidget *text = new TextWidget(20, 40, 50, GLUT_BITMAP_TIMES_ROMAN_24);
+	do
+	{	
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+		controle->processaEventos();
+		for (i = 0; i < controle->getLastKeys().size(); i++) {
+			if (controle->getLastKeys()[i] < 128)
+				ret = text->update((char)controle->getLastKeys()[i]);
+		}
+		text->paint();
+
+		SDL_GL_SwapBuffers();
+	} while (!ret);
+	
+	
 	switch (ret)
 	{
 		case MENU_JOGAR:
@@ -174,10 +166,8 @@ void Jogo::menu() {
 			this->quitGame(0);
 			break;
 	}
-	
 }
 */
-
 
 void Jogo::menu() {
 	//Menu bizarro temporario

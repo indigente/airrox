@@ -88,14 +88,14 @@ int Menu::update(int mousex, int mousey, int click)
 		oldw = SDL_GetVideoSurface()->w;
 		oldh = SDL_GetVideoSurface()->h;
 		
-		glViewport(0, 0, SDL_GetVideoSurface()->w, SDL_GetVideoSurface()->h);			
+		glViewport(0, 0, SDL_GetVideoSurface()->w, SDL_GetVideoSurface()->h);
 	
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		gluOrtho2D(0, SDL_GetVideoSurface()->w, 0, SDL_GetVideoSurface()->h);
 		glScalef(1, -1, 1);
 		glTranslatef(0, -SDL_GetVideoSurface()->h, -1);
-	}		
+	}
 	
 	// XXX - nao sei por que, mas fica lento se tirar isso
 	::EscreveString(0, 0, " ");

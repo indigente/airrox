@@ -3,8 +3,9 @@
 
 #include <GL/glut.h>
 
-#define MAXLEN 255
-
+/**
+ * Campo de entrada de texto (uma linha)
+ */
 class TextWidget
 {
 	private:
@@ -12,15 +13,17 @@ class TextWidget
 		int posy;
 		int len;
 		int maxlen;
-		char text[MAXLEN + 1];
-		
+		char *text;
 		void *glutfont;
 
 	public:
-		TextWidget(int x, int y, int maxlen, void *font = GLUT_BITMAP_8_BY_13);
+		TextWidget(int x, int y, unsigned int maxlen, void *font = GLUT_BITMAP_8_BY_13);
 		
 		int update(char c);
 		void paint();
+		void posiciona(int x, int y);
+		void limpa();
+		void mudaFonte(void *font);
 		
 		int getX() { return posx; }
 		int getY() { return posy; }
