@@ -7,9 +7,9 @@ using std::string;
 
 enum TipoDeParametro
 {
-	INT,
-	FLOAT,
-	STRING
+	TIPO_INT,
+	TIPO_FLOAT,
+	TIPO_STRING
 };
 
 /**

@@ -24,13 +24,13 @@ Parametro::~Parametro()
 	if (this->valor) {
 		switch (this->tipo)
 		{
-			case FLOAT:
+			case TIPO_FLOAT:
 				delete ((float *)this->valor);
 				break;
-			case INT:
+			case TIPO_INT:
 				delete ((int *)this->valor);
 				break;
-			case STRING:
+			case TIPO_STRING:
 				delete ((string *)this->valor);
 				break;
 		}
@@ -46,13 +46,13 @@ void Parametro::set(void *valor)
 {
 		switch (this->tipo)
 		{
-			case FLOAT:
+			case TIPO_FLOAT:
 				this->valorf = *((float *)valor);
 				break;
-			case INT:
+			case TIPO_INT:
 				this->valori = *((int *)valor);
 				break;
-			case STRING:
+			case TIPO_STRING:
 				this->valors = *((string *)valor);
 				break;
 		}
@@ -63,13 +63,13 @@ const void *Parametro::getValor()
 {
 		switch (this->tipo)
 		{
-			case FLOAT:
+			case TIPO_FLOAT:
 				return &valorf;
 				break;
-			case INT:
+			case TIPO_INT:
 				return &valori;
 				break;
-			case STRING:
+			case TIPO_STRING:
 				return &valors;
 				break;
 		}

@@ -47,15 +47,15 @@ void Jogo::inicializacao()
 {
 	config = new Config("config.txt");
 	// parametros de configuracao
-	config->cria("TelaLargura", INT);
-	config->cria("TelaAltura", INT);
-	config->cria("TelaCheia", INT);
-	config->cria("Nome", STRING);
-	config->cria("Servidor", STRING);
-	config->cria("Porta", INT);
-	config->cria("Sensibilidade", FLOAT);
-	config->cria("Tentativas", INT);
-	config->cria("Intervalo", INT);
+	config->cria("TelaLargura", TIPO_INT);
+	config->cria("TelaAltura", TIPO_INT);
+	config->cria("TelaCheia", TIPO_INT);
+	config->cria("Nome", TIPO_STRING);
+	config->cria("Servidor", TIPO_STRING);
+	config->cria("Porta", TIPO_INT);
+	config->cria("Sensibilidade", TIPO_FLOAT);
+	config->cria("Tentativas", TIPO_INT);
+	config->cria("Intervalo", TIPO_INT);
 	config->carrega();
 	config->ativaAutoSalvar();
 	

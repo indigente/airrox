@@ -154,15 +154,15 @@ void Config::set(string param, string *valor)
 	
 	if (p = ponteiroParaParametro(param)) {
 		switch (p->getTipo()) {
-			case INT:
+			case TIPO_INT:
 				*i = atoi(valor->c_str());
 				p->set(i);
 				break;
-			case FLOAT:
+			case TIPO_FLOAT:
 				sscanf(valor->c_str(), "%f", f);
 				p->set(f);
 				break;
-			case STRING:
+			case TIPO_STRING:
 				p->set(valor);
 				break;
 		}
@@ -227,13 +227,13 @@ void Config::salva()
 	
 	for (i = 0; i < params.size(); i++) {
 		switch (params[i].getTipo()) {
-			case INT:
+			case TIPO_INT:
 				ofs << params[i].getNome() << " = " << *((int *)params[i].getValor()) << endl;;
 				break;
-			case FLOAT:
+			case TIPO_FLOAT:
 				ofs << params[i].getNome() << " = " << *((float *)params[i].getValor()) << endl;
 				break;
-			case STRING:
+			case TIPO_STRING:
 				ofs << params[i].getNome() << " = " << *((string *)params[i].getValor()) << endl;
 				break;
 		}
