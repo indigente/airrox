@@ -16,31 +16,31 @@ class Menu;
 class MenuItem
 {
 	protected:
-		SDL_Surface image;
-		SDL_Surface hover_image;
+		int image;
+		int hover_image;
 		int x, y;
+		int width, height;
 		Menu *subMenu;
 		int id;
 
 	public:
-		MenuItem(int id, SDL_Surface image, SDL_Surface hover_image, 
-		  int x, int y, Alignment al);
-		MenuItem(int id, SDL_Surface image, SDL_Surface hover_image, 
-		  int x, int y);
+		// image eh o codigo de textura do OpenGL
+		MenuItem(int id, int image, int hover_image, 
+		  int x, int y, int width, int height, Alignment al=CENTER);
 		~MenuItem();
 		
 		void attachSubMenu(Menu *m) { this->subMenu = m; }
 		bool contains(int x, int y) {
 			return (x >= this->x && y >= this->y &&
-			  x < this->x + image.w && y < this->y + image.h);
+			  x < this->x + width && y < this->y + height);
 		}
 
-		SDL_Surface *getImage() { return &image; }
-		SDL_Surface *getHoverImage() { return &hover_image; }
+		int getImage() { return image; }
+		int getHoverImage() { return hover_image; }
 		int getX() { return x; }
 		int getY() { return y; }
-		int getWidth() { return image.w; }
-		int getHeight() { return image.h; }
+		int getWidth() { return width; }
+		int getHeight() { return height; }
 		int getId() { return id; }
 		
 };

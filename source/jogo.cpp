@@ -37,7 +37,7 @@ using namespace std;
 #include "conexao.h"
 #include "eventos.h"
 #include "audio.h"
-#include "menu.h"
+#include "gui/menu.h"
 
 Jogo::Jogo() {
 	
@@ -103,7 +103,7 @@ void Jogo::eventos(void *param, void *objeto){
 }
 */
 
-/*
+
 void Jogo::menu() {
 	int ret = 0;
 #define MENU_JOGAR 2
@@ -118,6 +118,9 @@ void Jogo::menu() {
 
 	SDL_ShowCursor(SDL_ENABLE);
 
+	glClearColor(1.0, 1.0, 0.5, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+
 	while (!ret)
 	{
 		controle->processaEventos();
@@ -125,7 +128,7 @@ void Jogo::menu() {
 		  controle->getMouseY(), controle->getMouseButton() != 0);
 //		SDL_UpdateRect(SDL_GetVideoSurface(), 0, 0, 0, 0);
 //		SDL_Flip(SDL_GetVideoSurface());
-//		SDL_GL_SwapBuffers();
+		SDL_GL_SwapBuffers();
 	}
 	
 	SDL_ShowCursor(SDL_DISABLE);
@@ -143,8 +146,8 @@ void Jogo::menu() {
 
 	
 }
-*/
 
+/*
 void Jogo::menu() {
 	//Menu bizarro temporario
 	char b,c;
@@ -199,6 +202,7 @@ void Jogo::menu() {
 	} while (c != 'S');
 	this->quitGame(0);
 }
+*/
 
 void Jogo::quitGame(int code) {
 	SDL_Quit();
