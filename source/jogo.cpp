@@ -112,26 +112,26 @@ void Jogo::menu() {
 	Menu *menu = new Menu();
 
 	menu->addItem(MENU_JOGAR, "../imagens/mjogar.bmp",
-	  "../imagens/mjogarh.bmp", 0, 40, CENTER);
-	menu->addItem(MENU_SAIR, "../imagens/mjogar.bmp",
-	  "../imagens/mjogarh.bmp", 0, 80, CENTER);
+	  "../imagens/mjogarh.bmp", 20, 40);
+	menu->addItem(MENU_SAIR, "../imagens/msair.bmp",
+	  "../imagens/msairh.bmp", 20, 100);
+	  
+	menu->init();
 
 	SDL_ShowCursor(SDL_ENABLE);
-
-	glClearColor(1.0, 1.0, 0.5, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT);
 
 	while (!ret)
 	{
 		controle->processaEventos();
 		ret = menu->update(controle->getMouseX(), 
-		  controle->getMouseY(), controle->getMouseButton() != 0);
+		  controle->getMouseY(), controle->getMouseButton());
 //		SDL_UpdateRect(SDL_GetVideoSurface(), 0, 0, 0, 0);
 //		SDL_Flip(SDL_GetVideoSurface());
 		SDL_GL_SwapBuffers();
 	}
 	
 	SDL_ShowCursor(SDL_DISABLE);
+	menu->deinit();
 
 	switch (ret)
 	{

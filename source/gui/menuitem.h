@@ -26,7 +26,7 @@ class MenuItem
 	public:
 		// image eh o codigo de textura do OpenGL
 		MenuItem(int id, int image, int hover_image, 
-		  int x, int y, int width, int height, Alignment al=CENTER);
+		  int x, int y, int width, int height, Alignment al=LEFT);
 		~MenuItem();
 		
 		void attachSubMenu(Menu *m) { this->subMenu = m; }
