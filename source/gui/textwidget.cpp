@@ -40,7 +40,8 @@ void TextWidget::paint()
 
 /**
  * Atualiza o texto de acordo com o caracter fornecido.
- * Backspace apaga a ultima letra, Enter finaliza.
+ * Backspace apaga a ultima letra, Enter finaliza, 
+ * Escape limpa o texto.
  * @param c Caracter fornecido
  */
 int TextWidget::update(char c)
@@ -58,6 +59,9 @@ int TextWidget::update(char c)
 		case 10:
 		case 13: // enter
 			ret = 1;
+			break;
+		case 27: // esc
+			this->limpa();
 			break;
 		default:
 			if (len < maxlen)

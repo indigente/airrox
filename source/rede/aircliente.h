@@ -30,7 +30,8 @@ class AirCliente : public AirRede
 		~AirCliente() {};
 		
 		bool conecta(const char *host, Uint16 porta, bool comoJogador);
-		bool recebeMensagem();
+		
+		int recebeMensagem();
 		void enviaEstado();
 };
 

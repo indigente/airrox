@@ -242,7 +242,7 @@ void Visual::Escrita2D(void) {
 	Console *c = jogo->getConsole();
 	unsigned int i;
 	for (i = 1; i <= c->getTamanho(); i++)
-		EscreveString(10.0, 34.0 + 12.0 * i, (void *)font, c->getLinha(i).c_str());
+		EscreveString(10.0, 46.0 + 12.0 * i, (void *)font, c->getLinha(i).c_str());
 }
 
 void Visual::cylinder(float r, float h, int segs)
@@ -309,7 +309,8 @@ void Visual::RedimensionaTela(int x, int y)
 
 /**************** Metodos de desenho ***************************/
 
-void Visual::Desenha(void) {
+void Visual::inicio()
+{
 	float g_LightPosition[4] = {0, 1, 0, 1};
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	defineCamera();
@@ -318,6 +319,10 @@ void Visual::Desenha(void) {
 	glLightfv( GL_LIGHT0, GL_POSITION, g_LightPosition );
 	glEnable(  GL_LIGHT0   );	
 	glNormal3f(1, 0, 1);
+}
+
+void Visual::desenhaNoBuffer()
+{
 	DesenhaMesa();
 	DesenhaDisco();
 	DesenhaJogador(0);
@@ -326,8 +331,18 @@ void Visual::Desenha(void) {
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_LIGHTING);
 	Escrita2D();
-	SDL_GL_SwapBuffers();
+}
+
+void Visual::Desenha(void) {
+	inicio();
+	desenhaNoBuffer();
+	fim();
 }	
+
+void Visual::fim()
+{
+	SDL_GL_SwapBuffers();
+}
 
 void Visual::DesenhaDisco(void)
 {

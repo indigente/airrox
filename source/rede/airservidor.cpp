@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-bool AirServidor::recebeMensagem()
+int AirServidor::recebeMensagem()
 {
 	int ret;
 	
@@ -18,39 +18,44 @@ bool AirServidor::recebeMensagem()
 				// provavelmente alguem tentando conectar
 				case -1:
 					this->processaPedidoDeConexao();
-					return true;
+					return this->pacote->data[0];
+					break;
 				// mensagem do jogador
 				case CANAL_JOGADOR:
-					processaMensagemDoJogador();
-					return true;
+					processaMensagem();
+					return this->pacote->data[0];
+					break;
 				// mensagem de um observador
 				case CANAL_OBSERVADOR:
-					return true;
+					processaMensagem();
+					return this->pacote->data[0];
+					break;
 			}
 			break;
 		// nao foi recebido nenhum pacote
 		case 0:
-			return false;
+			return 0;
 		// erro
 		case -1:
 			printf("AirServidor::recebeMensagens: %s\n", SDLNet_GetError());
-			return false;
+			return 0;
 	}
 }
 
-void AirServidor::processaMensagemDoJogador()
+void AirServidor::processaMensagem()
 {
 	switch (this->pacote->data[0])
 	{
 		case TIPO_POSICAO:
+		{
 			msgPosicao *m = (msgPosicao *)this->pacote->data;
-
-// 			partida->getDisco()->setPos(m->discopos);
-// 			partida->getDisco()->setVel(m->discovel);
-// 			partida->getJog(1)->setPontuacao(m->pontserv);
-// 			partida->getJog(0)->setPontuacao(m->pontcli);
 			partida->getJog(1)->setPos(m->jogpos);
-			
+			break;
+		}
+		case TIPO_TEXTO:
+			// repassa para todos os clientes
+			this->envia(CANAL_JOGADOR, this->pacote);
+			this->envia(CANAL_OBSERVADOR, this->pacote);
 			break;
 	}
 }

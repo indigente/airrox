@@ -45,7 +45,7 @@ void AirCliente::enviaPedidoDeConexao()
 	this->envia(this->canal, this->pacote);
 }
 
-bool AirCliente::recebeMensagem()
+int AirCliente::recebeMensagem()
 {
 	int ret;
 	
@@ -59,30 +59,30 @@ bool AirCliente::recebeMensagem()
 			{
 				// mensagem externa. ignora...
 				case -1:
-					return true;
+					return TIPO_OUTROS;
 				// mensagem do jogador
 				case CANAL_JOGADOR:
 					if (this->conectado)
 						processaMensagemDoJogador();
 					else
 						recebeRespostaDeConexao();
-					return true;
+					return this->pacote->data[0];
 				// mensagem de um observador
 				case CANAL_OBSERVADOR:
 					if (this->conectado)
 						processaMensagemDoJogador();
 					else
 						recebeRespostaDeConexao();
-					return true;
+					return this->pacote->data[0];
 			}
 			break;
 		// nao foi recebido nenhum pacote
 		case 0:
-			return false;
+			return 0;
 		// erro
 		case -1:
 			printf("AirCliente::recebeMensagens: %s\n", SDLNet_GetError());
-			return false;
+			return 0;
 	}
 }
 

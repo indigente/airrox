@@ -26,13 +26,7 @@ class Console
 		
 		void limpa();
 		
-		string getLinha(unsigned int n)
-		{
-			if (n >= 1 && n <= this->qtdLinhas)
-				return vec[n - 1];
-			else
-				return (string)" ";
-		}
+		string getLinha(unsigned int n);
 		
 		unsigned int getTamanho() { return /*vec.size();*/ qtdLinhas; }
 		unsigned int getCapacidade() { return qtdLinhas; }

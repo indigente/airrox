@@ -1,4 +1,5 @@
 #!/bin/sh
 porta=`cat porta.txt`
 echo "Usando a porta $porta"
-echo -ne "m\nv\n${porta}\n" | ./air
+#echo -ne "m\nv\n${porta}\n" | ./air
+./air S $porta

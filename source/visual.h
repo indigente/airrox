@@ -88,6 +88,10 @@ class Visual {
 		void DesenhaJogador(int j);
 		void DesenhaMesa(void);
 		void DesenhaDisco(void);
+		
+		void inicio();
+		void desenhaNoBuffer();
+		void fim();
 };
 #endif
 

@@ -16,12 +16,9 @@ Console::~Console()
 
 void Console::insere(const string &s)
 {
-	if (this->posAtual == this->qtdLinhas)
-		this->posAtual = 1;
-	else
-		this->posAtual++;
+	this->posAtual = (this->posAtual + 1) % this->qtdLinhas;
 
-	this->vec[this->posAtual - 1].assign(s);
+	this->vec[this->posAtual].assign(s);
 }
 
 void Console::limpa()
@@ -32,3 +29,10 @@ void Console::limpa()
 	this->posAtual = 0;
 }
 
+string Console::getLinha(unsigned int n)
+{
+	if (n >= 1 && n <= this->qtdLinhas)
+		return vec[(posAtual + n) % qtdLinhas];
+	else
+		return (string)" ";
+}

@@ -1,2 +1,3 @@
 #!/bin/sh
-echo -ne "u\n" | ./air
+#echo -ne "u\n" | ./air
+./air P

@@ -36,6 +36,7 @@
 // #include "eventos.h"
 #include "audio.h"
 #include "rede/airrede.h"
+#include "gui/textwidget.h"
 
 Partida::Partida(Jogo *j)
 {
@@ -45,6 +46,7 @@ Partida::Partida(Jogo *j)
 	this->modo = modo;
 
 	disco = new Disco();
+	texto = new TextWidget(10, 46, 40);
 		
 	//inicializaPartida();
 }
@@ -134,6 +136,8 @@ void Partida::executa()
 {
 	float tempo=0;
 	float initempo, fimtempo;
+	int pronto = 0; // indica se o usuario terminou de digitar a mensagem
+	int i;
 // 	int sock = jogo->getConexao()->getSocket();
 	
 	jogo->getAudio()->tocarMusica();
@@ -141,17 +145,41 @@ void Partida::executa()
 	while(1) {
 		initempo = glutGet(GLUT_ELAPSED_TIME);
 		
+		// controle e texto
 		jogo->getControle()->processaEventos();
+		for (i = 0; i < jogo->getControle()->getLastKeys().size(); i++) {
+			if (jogo->getControle()->getLastKeys()[i] < 128)
+				pronto = texto->update((char)jogo->getControle()->getLastKeys()[i]);
+		}
+		
+		if (pronto) {
+			jogo->getConexao()->enviaTexto(texto->getText());
+			// o servidor nao envia mensagem a si proprio.
+			// por isso eh necessario fazer um tratamento especial.
+			if (this->modo == MODO_MULTIPLAYER_SERVIDOR)
+				jogo->getConsole()->insere(texto->getText());
+			texto->limpa();
+			pronto = 0;
+		}
 
 		// rede
 		switch (this->modo) {
+			int tipomsg;
 			case MODO_MULTIPLAYER_SERVIDOR:
 			case MODO_MULTIPLAYER_CLIENTE:
 				jogo->getConexao()->enviaEstado();
-				while(jogo->getConexao()->recebeMensagem());
+				while(tipomsg = jogo->getConexao()->recebeMensagem())
+				{
+					if (tipomsg == TIPO_TEXTO)
+						jogo->getConsole()->insere((const char *)jogo->getConexao()->getDados() + 1);
+				}
 				break;
 			case MODO_OBSERVADOR:
-				while(jogo->getConexao()->recebeMensagem());
+				while(tipomsg = jogo->getConexao()->recebeMensagem())
+				{
+					if (tipomsg == TIPO_TEXTO)
+						jogo->getConsole()->insere((const char *)jogo->getConexao()->getDados() + 1);
+				}
 				break;
 		}
 
@@ -199,7 +227,11 @@ void Partida::executa()
 		}
 		jogo->getVisual()->getCamera()->atualiza(tempo);
 		
-		jogo->getVisual()->Desenha();
+		// desenha
+		jogo->getVisual()->inicio();
+		jogo->getVisual()->desenhaNoBuffer();
+		texto->paint();
+		jogo->getVisual()->fim();
 		
 		fimtempo = glutGet(GLUT_ELAPSED_TIME);
 		tempo = fimtempo - initempo;

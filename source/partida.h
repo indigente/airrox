@@ -36,6 +36,7 @@
 #include "jogador.h"
 #include "conexao.h"
 
+class TextWidget;
 class Colisao;
 
 class Partida
@@ -47,6 +48,8 @@ class Partida
 		Jogo *jogo;
 		Colisao *colisao;
 		int jc, jb; // jogador de cima, jogador de baixo
+		
+		TextWidget *texto;
 
 
 	public:

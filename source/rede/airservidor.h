@@ -17,7 +17,7 @@ class AirServidor : public AirRede
 		
 		void processaPedidoDeConexao();
 		void enviaRespostaDeConexao(char tipo);
-		void processaMensagemDoJogador();
+		void processaMensagem();
 		
 	public:
 		AirServidor(Partida *partida, Uint16 porta) : AirRede(partida, porta)
@@ -28,7 +28,7 @@ class AirServidor : public AirRede
 		
 		~AirServidor() {};
 		
-		bool recebeMensagem();
+		int recebeMensagem();
 		void enviaEstado();
 };
 

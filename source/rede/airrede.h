@@ -22,6 +22,8 @@
 #define TIPO_CONECTAR   3
 // mensagem de texto
 #define TIPO_TEXTO      4
+// outros...
+#define TIPO_OUTROS     255
 
 #define TIPO_CONEXAO_ACEITA 5
 #define TIPO_CONEXAO_REJEITADA 6
@@ -32,11 +34,17 @@ struct msgPura
 	char tipo;
 };
 
+struct msgTexto
+{
+	char tipo;
+	char texto[MAXBUF - sizeof(char)];
+};
+
 struct msgConectar {
 	char tipo;
 	// 0, se a pessoa quer se conectar como observador
 	// 1, se a pessoa quer se conectar como jogador
-	char comoJogador;	
+	char comoJogador;
 };
 
 struct msgPosicao {
@@ -54,9 +62,6 @@ struct msgEstado {
 	Vetor clipos; // posicao do cliente
 };
 
-
-
-
 class Partida;
 
 class AirRede : public Rede
@@ -65,20 +70,15 @@ class AirRede : public Rede
 		Partida *partida;
 		UDPpacket *pacote;
 		
-/*		int qtdJogadores;
-		int qtdObservadores;
-
-		void processaPedidoDeConexao();
-		void enviaRespostaDeConexao(char tipo);
-*/
 	public:
 		AirRede(Partida *partida, Uint16 porta);
 		~AirRede();
 		
-// 		bool conecta(char *host, Uint16 porta) {};
-		
-		virtual bool recebeMensagem()=0;
+		void enviaTexto(char *msg);
+		virtual int recebeMensagem()=0;
 		virtual void enviaEstado()=0;
+
+		const unsigned char *getDados() { return pacote->data; }
 };
 
 #endif
