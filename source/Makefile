@@ -41,8 +41,8 @@ camera.o \
 colisao.o \
 comunicacao.o \
 conexao.o \
-menuitem.o \
-menu.o \
+gui/menuitem.o \
+gui/menu.o \
 $(LOADER3D_PATH)/texture.o \
 $(LOADER3D_PATH)/3dsloader.o
 
