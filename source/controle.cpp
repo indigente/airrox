@@ -86,6 +86,8 @@ void Controle::processaEventos(){
 	SDL_Event evento;
 	Vetor v;
 
+	lastKeys.clear();
+
 	while (SDL_PollEvent( &evento) ) {
 		switch (evento.type) {
 			case SDL_MOUSEBUTTONUP:
@@ -149,6 +151,8 @@ void Controle::processaEventos(){
 				break;
 			case SDL_KEYDOWN:
 				this->KeyBuffer[evento.key.keysym.sym] = 1;
+				lastKeys.push_back(evento.key.keysym.sym);
+				
 				switch (evento.key.keysym.sym) {
 					// Audio
 					case SDLK_KP_PLUS:

@@ -36,12 +36,9 @@ class Jogo;
 
 class Controle {
 	private:
-		int mouseX, mouseY;
-		int mouseButton;
 		
 		Jogo *jogo;
 		float SENSIBILIDADE;
-		char KeyBuffer[SDLK_LAST];
 
 		struct {
 			Jogador *jog;
@@ -49,6 +46,12 @@ class Controle {
 		} jog[MAXJOG];
 		int qtdjog;
 
+		// Estado dos controles
+		int mouseX, mouseY;
+		int mouseButton;
+		char KeyBuffer[SDLK_LAST];
+		vector<SDLKey> lastKeys; // ultimas teclas pressionadas
+		
 	public:
 		Controle(Jogo *j, float SENSIBILIDADE = 0.75);
 
@@ -60,6 +63,8 @@ class Controle {
 		int getMouseX() { return this->mouseX; }
 		int getMouseY() { return this->mouseY; }
 		int getMouseButton() { return this->mouseButton; }
+		int getKeyState(SDLKey key) { return (key <= SDLK_LAST) ? KeyBuffer[key] : 0; }
+		vector<SDLKey> getLastKeys() { return lastKeys; }
 };
 #endif
 
