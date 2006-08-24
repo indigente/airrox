@@ -25,6 +25,7 @@
 #include "partida.h"
 #include <stdio.h>
 #include <ctype.h>
+#include <GL/glut.h>
 
 #define JOGO_TITULO "AirroX 0.0.0.0.2"
 
@@ -40,6 +41,7 @@ void instrucoes()
 }
 
 int main(int argc, char **argv) {
+	glutInit(&argc, argv);
 	Jogo *jogo;
 	
 	// o primeiro argumento eh o nome chamado

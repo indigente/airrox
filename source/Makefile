@@ -19,7 +19,7 @@
 
 # caminhos 
 LOADER3D_PATH = 3DSLoader
-DEVCPP_PATH = C:\Dev-Cpp
+#DEVCPP_PATH = C:\Dev-Cpp
 
 
 # arquivos utilizados na compilacao
@@ -70,7 +70,7 @@ BINWIN = $(BINLINUX).exe
 # flags (otimizacao e nao exibir warnings)
 FLAGS = -O2 -DREENTRANT -DHAVE_OPENGL #-g 
 
-INCLUDEWIN = -I$(DEVCPP_PATH)\include -I$(DEVCPP_PATH)\include\c++ -I$(DEVCPP_PATH)\include\c++\mingw32 -I$(DEVCPP_PATH)\include\c++\backward
+INCLUDEWIN = #-I$(DEVCPP_PATH)\include -I$(DEVCPP_PATH)\include\c++ -I$(DEVCPP_PATH)\include\c++\mingw32 -I$(DEVCPP_PATH)\include\c++\backward
 
 
 #########################################################
