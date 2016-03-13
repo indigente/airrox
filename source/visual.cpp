@@ -230,7 +230,7 @@ int Visual::diminuirResolucao(void) {
 	return 1;
 }
 
-GLvoid Visual::matarJanela(GLvoid) {}
+GLvoid Visual::matarJanela(void) {}
 
 /**************** Metodos auxiliares ***********************************/
 

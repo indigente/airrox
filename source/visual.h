@@ -70,7 +70,7 @@ class Visual {
 		int setarTelaCheia(void);
 		int aumentarResolucao(void);
 		int diminuirResolucao(void);
-		GLvoid matarJanela(GLvoid);
+		GLvoid matarJanela(void);
 		
 		void Escrita2D(void);
 		void EscreveString(float x, float y, void *font, const char *string);
