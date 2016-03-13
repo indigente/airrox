@@ -1,6 +1,6 @@
-TelaLargura = 320
-TelaAltura = 240
-TelaCheia = 1
+TelaLargura = 800
+TelaAltura = 600
+TelaCheia = 0
 Nome = rodrigo
 Servidor = localhost
 Porta = 6112
