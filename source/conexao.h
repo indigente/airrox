@@ -46,7 +46,7 @@ class Conexao : public Comunicacao {
 
 	
 		Conexao(Jogo *j);
-		Conexao::~Conexao();
+		~Conexao();
 		void servidor(int porta, void (*eventos) (void *,void*));
 		void cliente(string enderecoservidor, int porta, void (*eventos) (void *,void *));
 		void limparMsg();

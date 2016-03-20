@@ -29,6 +29,7 @@
 #include "jogador.h"
 #include "vetor.h"
 #include "conexao.h"
+#include "rede/airrede.h"
 
 #define TIPO_POS        1 // posicao do jogador
 #define TIPO_CHAT       2
@@ -110,7 +111,7 @@ void Eventos::cliente(void *param, void *obj) {
 	struct s_msg_jogdisco *msg_jogdisco;
 	
 	jogo = (Jogo *)obj;
-	Conexao *conexao = jogo->getConexao();
+	AirRede *conexao = jogo->getConexao();
 	Vetor v;
 	int socket = *((int *) param);
 	int retval;

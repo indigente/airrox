@@ -23,6 +23,7 @@
 
 #include "main.h"
 #include "auxiliar.h"
+#include <SDL/SDL.h>
 
 //Rotinas Construtoras/Demolidoras adicionadas por LD
 auxiliar::auxiliar(void) {

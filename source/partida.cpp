@@ -35,7 +35,6 @@
 // #include "conexao.h"
 // #include "eventos.h"
 #include "audio.h"
-#include "rede/airrede.h"
 #include "gui/textwidget.h"
 
 Partida::Partida(Jogo *j)
@@ -69,15 +68,15 @@ void Partida::inicializa(int modo) {
 			jogo->getControle()->registra(jog[0], CON_MOUSE);
 			jogo->getControle()->registra(jog[1], CON_IA);
 			break;
-		case MODO_MULTIPLAYER_CLIENTE:
-		case MODO_MULTIPLAYER_SERVIDOR:
-			jog[0] = new Jogador();
-			jog[1] = new JogadorNet(this);
-			jogo->getControle()->registra(jog[0], CON_MOUSE);
-			break;
-		case MODO_OBSERVADOR:
-			jog[0] = new JogadorNet(this);
-			jog[1] = new JogadorNet(this);
+		// case MODO_MULTIPLAYER_CLIENTE:
+		// case MODO_MULTIPLAYER_SERVIDOR:
+		// 	jog[0] = new Jogador();
+		// 	jog[1] = new JogadorNet(this);
+		// 	jogo->getControle()->registra(jog[0], CON_MOUSE);
+		// 	break;
+		// case MODO_OBSERVADOR:
+		// 	jog[0] = new JogadorNet(this);
+		// 	jog[1] = new JogadorNet(this);
 			break;
 	}
 
@@ -157,59 +156,59 @@ void Partida::executa()
 			fimDeJogo = true;
 		
 		// texto, se estiver conectado
-		if (modo == MODO_MULTIPLAYER_SERVIDOR ||
-		 modo == MODO_MULTIPLAYER_CLIENTE ||
-		 modo == MODO_OBSERVADOR)
-		{
-			for (i = 0; i < jogo->getControle()->getLastKeys().size(); i++) {
-				if (jogo->getControle()->getLastKeys()[i] < 128)
-					pronto = texto->update((char)jogo->getControle()->getLastKeys()[i]);
-			}
+		// if (modo == MODO_MULTIPLAYER_SERVIDOR ||
+		//  modo == MODO_MULTIPLAYER_CLIENTE ||
+		//  modo == MODO_OBSERVADOR)
+		// {
+		// 	for (i = 0; i < jogo->getControle()->getLastKeys().size(); i++) {
+		// 		if (jogo->getControle()->getLastKeys()[i] < 128)
+		// 			pronto = texto->update((char)jogo->getControle()->getLastKeys()[i]);
+		// 	}
 			
-			if (pronto) {
-				jogo->getConexao()->enviaTexto(texto->getText());
-				// o servidor nao envia mensagem a si proprio.
-				// por isso eh necessario fazer um tratamento especial.
-				if (this->modo == MODO_MULTIPLAYER_SERVIDOR)
-					jogo->getConsole()->insere(texto->getText());
-				texto->limpa();
-				pronto = 0;
-			}
-		}
+		// 	if (pronto) {
+		// 		jogo->getConexao()->enviaTexto(texto->getText());
+		// 		// o servidor nao envia mensagem a si proprio.
+		// 		// por isso eh necessario fazer um tratamento especial.
+		// 		if (this->modo == MODO_MULTIPLAYER_SERVIDOR)
+		// 			jogo->getConsole()->insere(texto->getText());
+		// 		texto->limpa();
+		// 		pronto = 0;
+		// 	}
+		// }
 
 		// rede
-		switch (this->modo) {
-			int tipomsg;
-			case MODO_MULTIPLAYER_SERVIDOR:
-			case MODO_MULTIPLAYER_CLIENTE:
-				jogo->getConexao()->enviaEstado();
-			case MODO_OBSERVADOR:
-				while(tipomsg = jogo->getConexao()->recebeMensagem())
-				{
-					switch (tipomsg)
-					{
-						case TIPO_TEXTO:
-							jogo->getConsole()->insere((const char *)jogo->getConexao()->getDados() + 1);
-							break;
-						case TIPO_DESCONECTAR:							
-							if (modo == MODO_MULTIPLAYER_CLIENTE || modo == MODO_OBSERVADOR)
-							{
-								jogo->getConsole()->insere("-- O servidor desconectou");
-								jogo->atualizaConsole();
-								SDL_Delay(1200);
-								fimDeJogo = true;
-							}
-							else {
-								jogo->getConsole()->insere("-- Alguem desconectou");
-								jogo->atualizaConsole();
-							}
+		// switch (this->modo) {
+		// 	int tipomsg;
+		// 	case MODO_MULTIPLAYER_SERVIDOR:
+		// 	case MODO_MULTIPLAYER_CLIENTE:
+		// 		jogo->getConexao()->enviaEstado();
+		// 	case MODO_OBSERVADOR:
+		// 		while(tipomsg = jogo->getConexao()->recebeMensagem())
+		// 		{
+		// 			switch (tipomsg)
+		// 			{
+		// 				case TIPO_TEXTO:
+		// 					jogo->getConsole()->insere((const char *)jogo->getConexao()->getDados() + 1);
+		// 					break;
+		// 				case TIPO_DESCONECTAR:							
+		// 					if (modo == MODO_MULTIPLAYER_CLIENTE || modo == MODO_OBSERVADOR)
+		// 					{
+		// 						jogo->getConsole()->insere("-- O servidor desconectou");
+		// 						jogo->atualizaConsole();
+		// 						SDL_Delay(1200);
+		// 						fimDeJogo = true;
+		// 					}
+		// 					else {
+		// 						jogo->getConsole()->insere("-- Alguem desconectou");
+		// 						jogo->atualizaConsole();
+		// 					}
 								
 								
-					}
-				}
-				break;
-				break;
-		}
+		// 			}
+		// 		}
+		// 		break;
+		// 		break;
+		// }
 
 		// audio da colisao
 		if ( colisao->checa()>0)
@@ -265,10 +264,10 @@ void Partida::executa()
 	///////// fim de jogo! ///////////////
 	
 	// manda mensagem de desconexao
-	if (modo == MODO_MULTIPLAYER_SERVIDOR ||
-	 modo == MODO_MULTIPLAYER_CLIENTE ||
-	 modo == MODO_OBSERVADOR)
-		jogo->getConexao()->desconecta();
+	// if (modo == MODO_MULTIPLAYER_SERVIDOR ||
+	//  modo == MODO_MULTIPLAYER_CLIENTE ||
+	//  modo == MODO_OBSERVADOR)
+	// 	jogo->getConexao()->desconecta();
 
 	// para a musica
 	jogo->getAudio()->musicaParada();

@@ -39,13 +39,10 @@ using namespace std;
 #include "config.h"
 #include "gui/menu.h"
 #include "gui/textwidget.h"
-// #include "conexao.h"
-#include "rede/aircliente.h"
-#include "rede/airservidor.h"
 
 void Jogo::inicializacao()
 {
-	config = new Config("config.txt");
+	config = new Config("../source/config.txt");
 	// parametros de configuracao
 	config->cria("TelaLargura", TIPO_INT);
 	config->cria("TelaAltura", TIPO_INT);
@@ -107,13 +104,13 @@ void Jogo::jogaPartida(int modo, char *host, int porta)
 	
 	switch (modo)
 	{
-		case MODO_MULTIPLAYER_SERVIDOR:
-			this->iniciaServidor(porta);
-			break;
-		case MODO_MULTIPLAYER_CLIENTE:
-		case MODO_OBSERVADOR:
-			this->iniciaCliente(modo, host, porta);
-			break;
+		// case MODO_MULTIPLAYER_SERVIDOR:
+		// 	this->iniciaServidor(porta);
+		// 	break;
+		// case MODO_MULTIPLAYER_CLIENTE:
+		// case MODO_OBSERVADOR:
+		// 	this->iniciaCliente(modo, host, porta);
+		// 	break;
 		case MODO_SINGLEPLAYER:
 			this->iniciaSinglePlayer();
 			break;
@@ -140,53 +137,53 @@ void Jogo::atualizaConsole()
  */
 int Jogo::tentaConectar(int modo, char *host, int porta, int tentativas, int intervalo)
 {
-	char msg[256];
-	int i, t1, tipomsg;
+	// char msg[256];
+	// int i, t1, tipomsg;
 	
-	for (i = 1; i <= tentativas; i++)
-	{
-		sprintf(msg, "Tentando conectar a %s:%d (%d)", host, porta, i);
-		console->insere(msg);
+	// for (i = 1; i <= tentativas; i++)
+	// {
+	// 	sprintf(msg, "Tentando conectar a %s:%d (%d)", host, porta, i);
+	// 	console->insere(msg);
 		
-		t1 = glutGet(GLUT_ELAPSED_TIME);
+	// 	t1 = glutGet(GLUT_ELAPSED_TIME);
 		
-		((AirCliente *)(conexao))->conecta(host, porta, modo);
+	// 	((AirCliente *)(conexao))->conecta(host, porta, modo);
 		
-		// tenta receber mensagem no tempo esperado
-		do {
-			tipomsg = conexao->recebeMensagem();
+	// 	// tenta receber mensagem no tempo esperado
+	// 	do {
+	// 		tipomsg = conexao->recebeMensagem();
 			
-			controle->processaEventos();
-			if (controle->getKeyState(SDLK_ESCAPE))
-				return 0;			
+	// 		controle->processaEventos();
+	// 		if (controle->getKeyState(SDLK_ESCAPE))
+	// 			return 0;			
 			
-			atualizaConsole();
-		} while (glutGet(GLUT_ELAPSED_TIME) - t1 < intervalo && 
-		   tipomsg != TIPO_CONEXAO_ACEITA && tipomsg != TIPO_CONEXAO_REJEITADA);
+	// 		atualizaConsole();
+	// 	} while (glutGet(GLUT_ELAPSED_TIME) - t1 < intervalo && 
+	// 	   tipomsg != TIPO_CONEXAO_ACEITA && tipomsg != TIPO_CONEXAO_REJEITADA);
 		
-		// verifica a mensagem recebida
-		switch (tipomsg)
-		{
-			case TIPO_CONEXAO_ACEITA:
-				console->insere("Conexao aceita!");
-				atualizaConsole();
-				return 1;
-				break;
-			case TIPO_CONEXAO_REJEITADA:
-				console->insere("Conexao rejeitada.");
-				atualizaConsole();				
-				return 0;
-				break;
-			default:
-				console->insere("Nao houve resposta.");
-				atualizaConsole();
-				break;
-		}
-	}
+	// 	// verifica a mensagem recebida
+	// 	switch (tipomsg)
+	// 	{
+	// 		case TIPO_CONEXAO_ACEITA:
+	// 			console->insere("Conexao aceita!");
+	// 			atualizaConsole();
+	// 			return 1;
+	// 			break;
+	// 		case TIPO_CONEXAO_REJEITADA:
+	// 			console->insere("Conexao rejeitada.");
+	// 			atualizaConsole();				
+	// 			return 0;
+	// 			break;
+	// 		default:
+	// 			console->insere("Nao houve resposta.");
+	// 			atualizaConsole();
+	// 			break;
+	// 	}
+	// }
 	
-	SDL_Delay(1200);
-	// se chegou ate aqui, eh porque nao foi possivel contactar o servidor
-	return 0;
+	// SDL_Delay(1200);
+	// // se chegou ate aqui, eh porque nao foi possivel contactar o servidor
+	// return 0;
 	
 }
 
@@ -199,15 +196,15 @@ int Jogo::tentaConectar(int modo, char *host, int porta, int tentativas, int int
  */
 void Jogo::iniciaCliente(int modo, char *host, int porta)
 {
-	if (modo == MODO_MULTIPLAYER_CLIENTE) // cliente jogador
-		partida->inicializa(MODO_MULTIPLAYER_CLIENTE);
-	else // cliente observador
-		partida->inicializa(MODO_OBSERVADOR);
-	conexao = new AirCliente(this->partida, 0);
-	if (tentaConectar(modo == MODO_MULTIPLAYER_CLIENTE, 
-	 host, porta, config->getInt("Tentativas"), config->getInt("Intervalo")))
-		partida->executa();
-	delete conexao;
+	// if (modo == MODO_MULTIPLAYER_CLIENTE) // cliente jogador
+	// 	partida->inicializa(MODO_MULTIPLAYER_CLIENTE);
+	// else // cliente observador
+	// 	partida->inicializa(MODO_OBSERVADOR);
+	// conexao = new AirCliente(this->partida, 0);
+	// if (tentaConectar(modo == MODO_MULTIPLAYER_CLIENTE, 
+	//  host, porta, config->getInt("Tentativas"), config->getInt("Intervalo")))
+	// 	partida->executa();
+	// delete conexao;
 }
 
 /**
@@ -217,34 +214,34 @@ void Jogo::iniciaCliente(int modo, char *host, int porta)
  */
 void Jogo::iniciaServidor(int porta)
 {
-	conexao = new AirServidor(this->partida, porta);
-	partida->inicializa(MODO_MULTIPLAYER_SERVIDOR);
-	if (aguardaConexao())
-		partida->executa();
-	delete conexao;
+	// conexao = new AirServidor(this->partida, porta);
+	// partida->inicializa(MODO_MULTIPLAYER_SERVIDOR);
+	// if (aguardaConexao())
+	// 	partida->executa();
+	// delete conexao;
 }
 
 int Jogo::aguardaConexao()
 {
-	int tipomsg;
+	// int tipomsg;
 	
-	console->insere("Aguardando o cliente...");
-	console->insere("(Tecle Esc para cancelar)");	
+	// console->insere("Aguardando o cliente...");
+	// console->insere("(Tecle Esc para cancelar)");	
 	
-	do {
-		controle->processaEventos();
-		tipomsg = conexao->recebeMensagem();
-		atualizaConsole();
-	} while (tipomsg != TIPO_CONEXAO_ACEITA && !controle->getKeyState(SDLK_ESCAPE));
+	// do {
+	// 	controle->processaEventos();
+	// 	tipomsg = conexao->recebeMensagem();
+	// 	atualizaConsole();
+	// } while (tipomsg != TIPO_CONEXAO_ACEITA && !controle->getKeyState(SDLK_ESCAPE));
 	
-	if (controle->getKeyState(SDLK_ESCAPE)) // cancelou 
-		return 0;
-	else {
-		console->insere("Cliente conectado!");
-		atualizaConsole();
-		SDL_Delay(1200);
-		return 1;
-	}
+	// if (controle->getKeyState(SDLK_ESCAPE)) // cancelou 
+	// 	return 0;
+	// else {
+	// 	console->insere("Cliente conectado!");
+	// 	atualizaConsole();
+	// 	SDL_Delay(1200);
+	// 	return 1;
+	// }
 }
 
 /** 
@@ -274,44 +271,44 @@ int Jogo::entradaDeTexto(TextWidget *text)
 
 int Jogo::pegaPorta()
 {
-	char buf[40];
-	static TextWidget *text = new TextWidget(20, 60, 5, GLUT_BITMAP_TIMES_ROMAN_24);
-	int pronto = 0;
+	// char buf[40];
+	// static TextWidget *text = new TextWidget(20, 60, 5, GLUT_BITMAP_TIMES_ROMAN_24);
+	// int pronto = 0;
 	
-	sprintf(buf, "%u", config->getInt("Porta"));
-	text->setText(buf);
+	// sprintf(buf, "%u", config->getInt("Porta"));
+	// text->setText(buf);
 	
-	do
-	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		visual->EscreveString(20, 30, GLUT_BITMAP_TIMES_ROMAN_24, "Digite a porta:");
-		pronto = entradaDeTexto(text);
-		SDL_GL_SwapBuffers();
-	} while (!pronto);
+	// do
+	// {
+	// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// 	visual->EscreveString(20, 30, GLUT_BITMAP_TIMES_ROMAN_24, "Digite a porta:");
+	// 	pronto = entradaDeTexto(text);
+	// 	SDL_GL_SwapBuffers();
+	// } while (!pronto);
 	
- 	int i = atoi(text->getText());
-	config->set("Porta", &i);
+ // 	int i = atoi(text->getText());
+	// config->set("Porta", &i);
 	
-	return atoi(text->getText());
+	// return atoi(text->getText());
 }
 
 char *Jogo::pegaHost()
 {
-	static TextWidget *text = new TextWidget(20, 60, 50, GLUT_BITMAP_TIMES_ROMAN_24);
-	int pronto = 0;
+	// static TextWidget *text = new TextWidget(20, 60, 50, GLUT_BITMAP_TIMES_ROMAN_24);
+	// int pronto = 0;
 
-	text->setText(config->getString("Servidor").c_str());
+	// text->setText(config->getString("Servidor").c_str());
 
-	do
-	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		visual->EscreveString(20, 30, GLUT_BITMAP_TIMES_ROMAN_24, "Digite o endereco do servidor:");				
-		pronto = entradaDeTexto(text);
-		SDL_GL_SwapBuffers();
-	} while (!pronto);
+	// do
+	// {
+	// 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// 	visual->EscreveString(20, 30, GLUT_BITMAP_TIMES_ROMAN_24, "Digite o endereco do servidor:");				
+	// 	pronto = entradaDeTexto(text);
+	// 	SDL_GL_SwapBuffers();
+	// } while (!pronto);
 	
-	config->set("Servidor", (void *)&((string)text->getText()));
-	return text->getText();
+	// config->set("Servidor", (void *)&((string)text->getText()));
+	// return text->getText();
 }
 
 void Jogo::menu() {
